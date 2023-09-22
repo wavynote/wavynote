@@ -11,7 +11,7 @@ GOBIN=go
 #  - cgo 활성를 위해서는 gcc도 필요하기 때문에 /ndlpsdk2/bin 경로도 PATH에 추가해주어야함
 all:
 	$(GOBIN) env -w CGO_ENABLED=1
-	GOOS=linux $(GOBIN) build -buildvcs=false -ldflags="-X 'main.version=v1.0.0-$(LAST_COMMIT_SHA)' -X 'main.bdate=$(BUILD_DATE)'" -o ./bin/wavynoted ./cmd/wavynoted;
+	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GOBIN) build -buildvcs=false -ldflags="-X 'main.version=v1.0.0-$(LAST_COMMIT_SHA)' -X 'main.bdate=$(BUILD_DATE)'" -o ./bin/wavynoted ./cmd/wavynoted;
 	
 clean:
 	cd bin/; /bin/rm -rf wavynoted
