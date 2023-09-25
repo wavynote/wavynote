@@ -79,6 +79,12 @@
         }
       }
     ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
     "no-console": "off",
     "react/jsx-filename-extension": [
       "warn",
@@ -153,6 +159,7 @@
         "default": "array"
       }
     ],
+    "@typescript-eslint/no-var-requires": 0,
     "no-unused-vars": [
       "error",
       {
