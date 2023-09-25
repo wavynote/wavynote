@@ -1,6 +1,11 @@
 {
   "root": true,
-  "env": { "browser": true, "es6": true, "node": true, "jest": true },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
   "extends": [
     "next",
     "next/core-web-vitals",
@@ -14,67 +19,171 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react", "import","@typescript-eslint"],
+  "plugins": [
+    "react",
+    "import",
+    "@typescript-eslint"
+  ],
   "parserOptions": {
-    "ecmaFeatures": { "jsx": true },
+    "ecmaFeatures": {
+      "jsx": true
+    },
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "rules": {
     "react/function-component-definition": [
       2,
-      { "namedComponents": ["function-declaration", "arrow-function"] }
+      {
+        "namedComponents": [
+          "function-declaration",
+          "arrow-function"
+        ]
+      }
     ],
     "no-warning-comments": [
       "warn",
       {
-        "terms": ["TODO", "FIXME", "BUG"],
+        "terms": [
+          "TODO",
+          "FIXME",
+          "BUG"
+        ],
         "location": "anywhere"
       }
     ],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "~/**",
+            "group": "internal",
+            "position": "after"
+          }
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
     "no-console": "off",
-    "react/jsx-filename-extension": ["warn", { "extensions": [".tsx", ".jsx"] }],
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        "extensions": [
+          ".tsx",
+          ".jsx"
+        ]
+      }
+    ],
     "import/prefer-default-export": "off",
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
     "react/require-default-props": "off",
     "react/prop-types": "off",
     "consistent-return": "off",
-    "curly": ["error", "all"],
-    "eqeqeq": ["error", "smart"],
+    "curly": [
+      "error",
+      "all"
+    ],
+    "eqeqeq": [
+      "error",
+      "smart"
+    ],
     "@typescript-eslint/naming-convention": [
       "error",
       {
-        "format": ["camelCase", "UPPER_CASE", "PascalCase", "snake_case"],
+        "format": [
+          "camelCase",
+          "UPPER_CASE",
+          "PascalCase",
+          "snake_case"
+        ],
         "selector": "variable",
         "leadingUnderscore": "allow"
       },
       {
-        "format": ["camelCase", "snake_case"],
+        "format": [
+          "camelCase",
+          "snake_case"
+        ],
         "selector": "parameter",
         "leadingUnderscore": "allow"
       },
-      { "format": ["camelCase", "PascalCase"], "selector": "function" },
-      { "format": ["PascalCase"], "selector": "interface" },
-      { "format": ["PascalCase"], "selector": "typeAlias" }
+      {
+        "format": [
+          "camelCase",
+          "PascalCase"
+        ],
+        "selector": "function"
+      },
+      {
+        "format": [
+          "PascalCase"
+        ],
+        "selector": "interface"
+      },
+      {
+        "format": [
+          "PascalCase"
+        ],
+        "selector": "typeAlias"
+      }
     ],
-    "@typescript-eslint/array-type": ["error", { "default": "array" }],
+    "@typescript-eslint/array-type": [
+      "error",
+      {
+        "default": "array"
+      }
+    ],
     "no-unused-vars": [
       "error",
-      { "argsIgnorePattern": "^_", "destructuredArrayIgnorePattern": "^_" }
+      {
+        "argsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_"
+      }
     ],
     "react/react-in-jsx-scope": "off",
-    "import/extensions": ["error", "never"],
+    "import/extensions": [
+      "error",
+      "never"
+    ],
     "padding-line-between-statements": [
       "error",
-      { "blankLine": "always", "prev": "*", "next": "return" }
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": "return"
+      }
     ]
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "paths": ["src"]
+        "paths": [
+          "src"
+        ]
       }
     }
   },
-  "ignorePatterns": ["node_modules/"]
+  "ignorePatterns": [
+    "node_modules/"
+  ]
 }

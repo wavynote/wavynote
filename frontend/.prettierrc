@@ -7,26 +7,6 @@
   "trailingComma": "all",
   "bracketSpacing": true,
   "bracketSameLine": true,
-  "arrowParens": "avoid",
-  "importOrder": [
-    ",^(react/(.*)$)|^(react$)",
-    ",^(next/(.*)$)|^(next$)",
-    "<THIRD_PARTY_MODULES>",
-    "^@apis/(.*)$",
-    "^@store/(.*)$",
-    "^@utils/(.*)$",
-    "^@hooks/(.*)$",
-    "^@app/(.*)$",
-    "^@containers/(.*)$",
-    "^@components/(.*)$",
-    "(components/|./index)",
-    "^types$",
-    "^@types/(.*)$",
-    ".svg",
-    "^../(.*)$",
-    "(?=./styles.css.ts)",
-    "^[./]"
-  ],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "quoteProps": "consistent",
+  "arrowParens": "always"
 }
