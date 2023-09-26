@@ -55,26 +55,95 @@
       }
     ],
     "import/order": [
-      "error",
+      "warn",
       {
         "groups": [
           "builtin",
           "external",
           "internal",
-          "parent",
-          "sibling",
-          "index",
+          [
+            "parent",
+            "sibling",
+            "index"
+          ],
           "object",
-          "type"
+          "type",
+          "unknown"
         ],
         "pathGroups": [
           {
-            "pattern": "~/**",
+            "pattern": "{react*, react*/**}",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "*next/**",
+            "group": "external",
+            "position": "before",
+            "patternOptions": {
+              "partial": true
+            }
+          },
+          {
+            "pattern": "@apis/*",
             "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@store/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@utils/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@hooks/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@app/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@containers/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@components/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@types/*",
+            "group": "type",
+            "position": "after"
+          },
+          {
+            "pattern": "./**/*.css",
+            "group": "unknown",
+            "position": "after"
+          },
+          {
+            "pattern": "../**/*.css",
+            "group": "unknown",
+            "position": "after"
+          },
+          {
+            "pattern": "*.css",
+            "group": "unknown",
             "position": "after"
           }
         ],
+        "pathGroupsExcludedImportTypes": [],
         "newlines-between": "always",
+        "distinctGroup": false,
+        "warnOnUnassignedImports": true,
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true
