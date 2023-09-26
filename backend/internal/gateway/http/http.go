@@ -67,33 +67,28 @@ func (h *HTTPServer) StartServer() {
 			})
 	})
 
-	api := router.Group(restapi.RESTAPI_BASEPATH)
-	{
-		box := api.Group(restapi.RESTAPI_SERVICENAME_BOX)
-		{
-			//
-			box.GET()
-		}
+	// api := router.Group(restapi.RESTAPI_BASEPATH)
+	// {
+	// 	box := api.Group(restapi.RESTAPI_SERVICENAME_BOX)
+	// 	{
 
-		keyword := api.Group(restapi.RESTAPI_SERVICENAME_KEYWORD)
-		{
-			//
-			keyword.GET()
-		}
+	// 	}
 
-		write := api.Group(restapi.RESTAPI_SERVICENAME_WRITE)
-		{
-			//
-			write.GET()
-		}
+	// 	keyword := api.Group(restapi.RESTAPI_SERVICENAME_KEYWORD)
+	// 	{
 
-		profile := api.Group(restapi.RESTAPI_SERVICENAME_PROFILE)
-		{
-			//
-			profile.GET()
-		}
+	// 	}
 
-	}
+	// 	write := api.Group(restapi.RESTAPI_SERVICENAME_WRITE)
+	// 	{
+
+	// 	}
+
+	// 	profile := api.Group(restapi.RESTAPI_SERVICENAME_PROFILE)
+	// 	{
+
+	// 	}
+	// }
 
 	tlsSrv := &http.Server{
 		Addr:         connInfo,
