@@ -1,11 +1,12 @@
 import eslintConfigPrettier from 'eslint-config-prettier';
 
-module.exports = [
+export default [
   {
     files: ['**/*.ts', '**/*.tsx'],
     ignores: ['**/*.config.js', '**/*.config.ts'],
     rules: {
       semi: 'error',
+
     },
   },
   eslintConfigPrettier,
