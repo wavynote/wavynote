@@ -1,6 +1,6 @@
 import eslintConfigPrettier from 'eslint-config-prettier';
 
-export default [
+module.exports = [
   {
     files: ['**/*.ts', '**/*.tsx'],
     ignores: ['**/*.config.js', '**/*.config.ts'],
