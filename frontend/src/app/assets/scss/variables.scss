@@ -1,0 +1,69 @@
+@charset "utf-8";
+
+/* Color */
+$color_white: #fff;
+$color_black: #000;
+
+$color_primary: #006dbb;
+$color_primary_90p: #1b7cc2;
+$color_primary_80p: #368bc9;
+$color_primary_70p: #519ad0;
+$color_primary_60p: #6ca9d7;
+$color_primary_50p: #88b9dd;
+$color_primary_40p: #a3c8e4;
+$color_primary_30p: #bed7eb;
+$color_primary_20p: #d9e6f2;
+$color_primary_10p: #f4f5f9;
+
+$color_grey_verylight: #f5f5f5;
+$color_grey_light: #f0f0f0;
+$color_grey_default: #d1d1d1;
+$color_grey_dark: #b1b1b1;
+$color_grey_verydark: #929292;
+
+$color_black_verylight: #727272;
+$color_black_light: #535353;
+$color_black_default: #333333;
+$color_black_dark: #282828;
+$color_black_verydark: #212121;
+
+$color_red_verylight: #fee5e5;
+$color_red_default: #e83534;
+$color_red_default_70p:#ef7170; 
+
+$color_blue_black: #040113;
+
+$color_etc_01: #e4e7ee;
+$color_etc_02: #b1b3be;
+$color_etc_03: #00c92e;
+$color_etc_04: #222433;
+$color_etc_05: #1e1e1e;
+$color_etc_06: #3d3d3d;
+$color_etc_07: #212121;
+$color_etc_08: #e3f2fd;
+$color_etc_09: #94acbf;
+$color_etc_10: #c5c9d6;
+$color_etc_11: #e5e7ee;
+$color_etc_12: #90939e;
+$color_etc_13: #f78c25;
+$color_etc_14: #1d8834;
+
+$filter_color_primary_80p: invert(67%) sepia(38%) saturate(6929%) hue-rotate(178deg) brightness(88%) contrast(75%);
+$filter_color_white: brightness(2);
+$filter_color_black_default: brightness(0) saturate(100%) invert(15%) sepia(0%) saturate(2199%) hue-rotate(199deg) brightness(100%) contrast(87%);
+$filter_color_red_default: brightness(0) saturate(100%) invert(20%) sepia(76%) saturate(3649%) hue-rotate(349deg) brightness(108%) contrast(83%);
+$filter_color_grey_default: brightness(0) saturate(100%) invert(66%) sepia(100%) saturate(1%) hue-rotate(319deg) brightness(105%) contrast(95%);
+
+/* Font Size */
+$fontsize_headline1: 7rem;
+$fontsize_headline2: 5rem;
+$fontsize_headline3: 3.5rem;
+$fontsize_large: 2.5rem;
+$fontsize_medium: 1.8rem;
+$fontsize_regular: 1.6rem;
+$fontsize_small: 1.4rem;
+$fontsize_verysmall: 1.2rem;
+
+/* Font Color */
+.font_color_primaryt{ color: $color_primary; }
+.font_color_red_default{ color: $color_red_default; }

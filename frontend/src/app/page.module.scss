@@ -1,0 +1,113 @@
+.contentWrap{
+    max-width: 768px;
+    height: 100vh;
+    margin: 0 auto;
+    
+    background-image: linear-gradient(
+        180deg,
+        hsl(216deg 100% 88%) 0%,
+        hsl(125deg 11% 86%) 50%,
+        hsl(54deg 62% 78%) 100%
+        );
+
+    position: relative;
+
+    box-sizing: border-box;
+    padding: 30px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    > div{
+        width: 100%;
+        
+    }
+}
+
+.nav{
+    position: absolute;
+    width: 100%;
+    height: 90px;
+    bottom: 0;
+    left: 0;
+
+    .navMin{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: #fff;
+
+        a{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            align-items: center;
+            font-size: 1rem;
+            line-height: 140%;
+            color: #C6C6D0;
+        }
+    }
+}
+
+.outContent{
+    position: absolute;
+    bottom: 50px;
+    right: 30px;
+    width: 220px;
+    height: 50px;
+    border-radius: 25px;
+    background-color: #0478EA;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 1300px) {
+    .outContent{
+        display: none;
+    }
+}
+
+
+/* start of btnWrap */
+.btnWrap{
+    width: 100%;
+}
+
+.newNoteBtn{
+    button{
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 26px;
+        background-color: #040113;
+        color: #ffffff;
+        border-radius: 20px;
+        text-align: left;
+        position:relative;
+
+        &::after{
+            content: '';
+            display: block;
+            width: 32px;
+            height: 70px;
+            background-image: url('./assets/images/contents/pen.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            position:absolute;
+            top: -23px;
+            right: 10px;
+            transform: rotate(15deg);
+        }
+    }
+}
+/* end of btnWrap */
+
+
+/* start of header */
+ 
+/* end of header */
