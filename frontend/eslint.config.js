@@ -7,7 +7,7 @@ import tsParser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
 
-module.exports = [
+export default [
   {
     plugins: {
       react: reactPlugin,
@@ -41,6 +41,7 @@ module.exports = [
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
+    ignore: ['**/*.config.js'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
