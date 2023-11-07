@@ -1,0 +1,55 @@
+@charset "utf-8";
+
+/* start of reset */ 
+body {
+    -webkit-text-size-adjust:none;
+} 
+
+/* BASIC */ 
+html {margin:0; padding:0; font-size:10px;} 
+body {height:100%; font-size: 1.6rem; font-weight:400;} 
+html {overflow-y:auto;overflow-x: hidden;} 
+body, p, ul, ol, li, dl, dt, dd, form, table, th, td, fieldset, input, textarea, select, button, h1, h2, h3, h4, h5, h6, pre {margin:0; padding:0; -webkit-text-size-adjust:none; font-family:'NanumSquareNeo', sans-serif; outline: none; line-height: 170%;} 
+/* 아이폰 가로모드 글자 크기 확대 방지: -webkit-text-size-adjust:none; */ 
+
+header, footer, nav, aside, section, article {display:block;} 
+fieldset, img {border:0;}
+img { border:0;vertical-align: bottom;} 
+table {padding:0; border-spacing:0px; border:0; border-collapse:collapse;} 
+ul, ol {list-style:none; } 
+ul,li {display: inline-block; list-style: none;}
+a {text-decoration:none; display: block; color: #333333;} 
+a:link, a:visited, a:active, a:hover {text-decoration:none;} 
+
+// .clear { clear:both;}
+
+button, [type="button"], [type="reset"], [type="submit"]{
+    -webkit-appearance:none;
+    appearance:none;cursor: 
+    pointer;border:0;
+    padding:0;
+    background-image: none;
+}
+
+input{ -webkit-appearance: none; -webkit-text-fill-color: black; } 
+input::placeholder{color: $color_grey_light;}
+
+input::-webkit-input-placeholder {
+    color: $color_grey_light;
+}
+
+input:-ms-input-placeholder {
+    color: $color_grey_light;
+}
+textarea::-webkit-input-placeholder {
+    color: $color_grey_light;
+}
+textarea:-ms-input-placeholder {
+    color: $color_grey_light;
+}
+
+i{color:transparent; font-size:0;}
+label{display: inline-block;}
+// :focus{outline: 1px solid black !important;}
+
+/* end of reset */ 
