@@ -1,0 +1,88 @@
+.nav{
+    max-width: 768px;
+    position: fixed;
+    width: 100%;
+    height: 90px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    .navMin{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: #fff;
+
+        a{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            align-items: center;
+            font-size: 1rem;
+            line-height: 140%;
+            color: #C6C6D0;
+        }
+    }
+}
+
+.outContent{
+    position: absolute;
+    top: 50px;
+    right: 30px;
+    width: 220px;
+    height: 50px;
+    border-radius: 25px;
+    background-color: #0478EA;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 1300px) {
+    .outContent{
+        display: none;
+    }
+}
+
+
+/* start of btnWrap */
+.btnWrap{
+    width: 100%;
+}
+
+.newNoteBtn{
+    button{
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 26px;
+        background-color: #040113;
+        color: #ffffff;
+        border-radius: 15px;
+        text-align: center;
+        position:relative;
+
+        // &::after{
+        //     content: '';
+        //     display: block;
+        //     width: 32px;
+        //     height: 70px;
+        //     background-image: url('./assets/images/contents/pen.png');
+        //     background-size: 100% 100%;
+        //     background-repeat: no-repeat;
+        //     position:absolute;
+        //     top: -23px;
+        //     right: 10px;
+        //     transform: rotate(15deg);
+        // }
+    }
+}
+/* end of btnWrap */
+
+
+/* start of header */
+ 
+/* end of header */

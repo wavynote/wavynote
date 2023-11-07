@@ -1,0 +1,63 @@
+
+/* start of default layout repeat */
+    .contentWrap{
+        max-width: 768px;
+        height: 100vh;
+        margin: 0 auto;
+        background-color: #F0F0F6;
+        position: relative;
+        padding: 20px 0;
+        box-sizing: border-box;
+
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        > div{
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0 20px;
+        }
+    }
+
+    .outContent{
+        position: absolute;
+        top: 50px;
+        right: 30px;
+        width: 220px;
+        height: 50px;
+        border-radius: 25px;
+        background-color: #0478EA;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media (max-width: 1300px) {
+        .outContent{
+            display: none;
+        }
+    }
+
+
+    /* start of btnWrap */
+    .btnWrap{
+        width: 100%;
+    }
+
+    .newNoteBtn{
+        button{
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 26px;
+            background-color: #040113;
+            color: #ffffff;
+            border-radius: 15px;
+            text-align: center;
+            position:relative;
+        }
+    }
+    /* end of btnWrap */
+
+/* end of default layout repeat */
