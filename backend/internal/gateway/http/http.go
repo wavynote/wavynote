@@ -9,6 +9,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/wavynote/internal/gateway/http/handler/restapi"
+	"github.com/wavynote/internal/gateway/http/handler/restapi/box"
+	"github.com/wavynote/internal/gateway/http/handler/restapi/root"
+	"github.com/wavynote/internal/gateway/http/handler/restapi/search"
+	"github.com/wavynote/internal/gateway/http/handler/restapi/write"
 )
 
 type HTTPServer struct {
@@ -67,28 +71,45 @@ func (h *HTTPServer) StartServer() {
 			})
 	})
 
-	// api := router.Group(restapi.RESTAPI_BASEPATH)
-	// {
-	// 	box := api.Group(restapi.RESTAPI_SERVICENAME_BOX)
-	// 	{
+	api := router.Group(restapi.RESTAPI_BASEPATH)
+	{
+		m := api.Group(restapi.RESTAPI_SERVICENAME_MAIN)
+		{
+			m.GET(
+				restapi.LOCATION_FOR_MAIN_FOLDERLIST,
+				root.NewRootHandler().GetFolderList,
+			)
+		}
 
-	// 	}
+		w := api.Group(restapi.RESTAPI_SERVICENAME_WRITE)
+		{
+			w.POST(
+				restapi.LOCATION_FOR_WRITE_SAVE,
+				write.NewWriteHandler().SaveNote,
+			)
+		}
 
-	// 	keyword := api.Group(restapi.RESTAPI_SERVICENAME_KEYWORD)
-	// 	{
+		s := api.Group(restapi.RESTAPI_SERVICENAME_SEARCH)
+		{
+			s.GET(
+				restapi.LOCATION_FOR_SEARCH_FROM_TOP,
+				search.NewSearchHandler().SearchFromTop,
+			)
+		}
 
-	// 	}
+		b := api.Group(restapi.RESTAPI_SERVICENAME_BOX)
+		{
+			b.DELETE(
+				restapi.LOCATION_FOR_BOX_CONVERSATION,
+				box.NewBoxHandler().DeleteConversation,
+			)
+		}
 
-	// 	write := api.Group(restapi.RESTAPI_SERVICENAME_WRITE)
-	// 	{
+		// p := api.Group(restapi.RESTAPI_SERVICENAME_PROFILE)
+		// {
 
-	// 	}
-
-	// 	profile := api.Group(restapi.RESTAPI_SERVICENAME_PROFILE)
-	// 	{
-
-	// 	}
-	// }
+		// }
+	}
 
 	tlsSrv := &http.Server{
 		Addr:         connInfo,
