@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={nanumSquareNeo.className}>
       <body className="flex justify-center items-center w-full h-screen">
-        <main className="w-[390px] h-[844px] bg-[#F0F0F6]">{children}</main>
+        <main className="w-[390px] h-[844px] bg-gray-100">{children}</main>
       </body>
     </html>
   );
