@@ -71,6 +71,69 @@ type Response500 struct {
 	Msg  string `json:"msg" example:"Internal server error"`
 }
 
+type DefaultResponse struct {
+	Result string `json:"result" example:"true"` // 요청에 대한 처리 성공/실패 여부
+	Msg    string `json:"msg"`                   // 실패 시 반환하는 에러 메시지
+}
+
+type FolderSimpleInfo struct {
+	FolderId   string `json:"folder_id" example:"a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b"` // 폴더의 고유 id 값
+	FolderName string `json:"folder_name" example:"my diary"`                           // 폴더 이름
+	NoteCount  int    `json:"note_count" example:"5"`                                   // 폴더에 존재하는 노트의 총 개수
+}
+
+type FolderInfo struct {
+}
+
+type FolderListResponse struct {
+	Folders []FolderSimpleInfo `json:"data"`
+}
+
+type NoteSimpleInfo struct {
+	NoteId  string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`          // 해당 폴더에 존재하는 노트의 고유 id 값
+	Title   string `json:"title" example:"my first note"`                                   // 해당 폴더에 존재하는 노트의 제목
+	Preview string `json:"preview" example:"This is the main text of my first wavey note."` // 해당 폴더에 존재하는 노트의 본문 미리보기(글자수 제한)
+}
+
+type NoteInfo struct {
+	NoteId   string   `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`   // 노트의 고유 id 값
+	FolderId string   `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"` // 노트가 포함되어 있는 폴더의 고유 id 값
+	FromId   string   `json:"from_id" example:"wavynoteadmin@gmail.com"`                // 노트 작성자(또는 송신자)의 id
+	ToId     string   `json:"to_id" example:"somebody@naver.com"`                       // 노트 수신자의 id
+	SaveAt   string   `json:"save_at" example:"2023-11-01 21:00:00"`                    // 노트를 저장한 마지막 날짜 및 시간 정보
+	SendAt   string   `json:"send_at" example:"2023-11-01 23:20:12"`                    // 노트를 송신한 날짜 및 시간 정보
+	Title    string   `json:"" example:"my first note"`                                 // 노트의 제목
+	Content  string   `json:"" example:"This is the main text of my first wavey note."` // 노트의 본문 내용
+	Keywords []string `json:"" example:"sport"`                                         // 노트의 키워드
+}
+
+type NoteListResponse struct {
+	Notes []NoteSimpleInfo `json:"data"`
+}
+
+type ConversationInfo struct {
+	ConverstaionId string `json:"conversation_id" example:"1afc571d-61bf-4cef-95ce-ab791f999297"` // 대화방 고유의 id 값
+	OppNickName    string `json:"opp_nickname" example:"somebody"`                                // 대화 상대의 별명
+	NoteCount      int    `json:"note_count" example:"20"`                                        // 대화방에 존재하는 노트의 총 개수
+}
+
+type ConversationListResponse struct {
+	Conversations []ConversationInfo `json:"data"`
+}
+
+type ConversationNoteInfo struct {
+	NoteId  string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`
+	FromId  string `json:"from_id" example:"wavynoteadmin@gmail.com"`
+	ToId    string `json:"to_id" example:"somebody@naver.com"`
+	Title   string `json:"title" example:"my first note"`
+	Preview string `json:"preview" example:"This is the main text of my first wavey note."`
+	SendAt  string `json:"send_at" example:"2023-10-29 21:00:48"`
+}
+
+type ConverstaionNoteListResponse struct {
+	ConversationNotes []ConversationNoteInfo `json:"data"`
+}
+
 func BasicAuth(c *gin.Context) {
 	user, pwd, ok := c.Request.BasicAuth()
 	if !ok {

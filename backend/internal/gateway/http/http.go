@@ -79,6 +79,26 @@ func (h *HTTPServer) StartServer() {
 				restapi.LOCATION_FOR_MAIN_FOLDERLIST,
 				root.NewRootHandler().GetFolderList,
 			)
+
+			m.GET(
+				restapi.LOCATION_FOR_MAIN_NOTELIST,
+				root.NewRootHandler().GetNoteList,
+			)
+
+			m.POST(
+				restapi.LOCATION_FOR_MAIN_FOLDER,
+				root.NewRootHandler().ChangeFolderName,
+			)
+
+			m.DELETE(
+				restapi.LOCATION_FOR_MAIN_FOLDER,
+				root.NewRootHandler().RemoveFolder,
+			)
+
+			m.DELETE(
+				restapi.LOCATION_FOR_MAIN_NOTE,
+				root.NewRootHandler().RemoveNote,
+			)
 		}
 
 		w := api.Group(restapi.RESTAPI_SERVICENAME_WRITE)
@@ -87,18 +107,58 @@ func (h *HTTPServer) StartServer() {
 				restapi.LOCATION_FOR_WRITE_SAVE,
 				write.NewWriteHandler().SaveNote,
 			)
+
+			w.POST(
+				restapi.LOCATION_FOR_WRITE_SEND,
+				write.NewWriteHandler().SendNote,
+			)
+
+			w.POST(
+				restapi.LOCATION_FOR_WRITE_OPENNOTE,
+				write.NewWriteHandler().ShareToOpenNote,
+			)
+
+			w.POST(
+				restapi.LOCATION_FOR_WRITE_RANDOM,
+				write.NewWriteHandler().SendNoteToRandomUser,
+			)
+
+			w.GET(
+				restapi.LOCATION_FOR_WRITE_SHOW,
+				write.NewWriteHandler().ShowNote,
+			)
 		}
 
 		s := api.Group(restapi.RESTAPI_SERVICENAME_SEARCH)
 		{
 			s.GET(
 				restapi.LOCATION_FOR_SEARCH_FROM_TOP,
-				search.NewSearchHandler().SearchFromTop,
+				search.NewSearchHandler().SearchNoteFromTop,
+			)
+
+			s.GET(
+				restapi.LOCATION_FOR_SEARCH_FROM_FOLDER,
+				search.NewSearchHandler().SearchNoteFromTargetFolder,
 			)
 		}
 
 		b := api.Group(restapi.RESTAPI_SERVICENAME_BOX)
 		{
+			b.GET(
+				restapi.LOCATION_FOR_BOX_CONVERSATION_LIST,
+				box.NewBoxHandler().ShowConversation,
+			)
+
+			b.GET(
+				restapi.LOCATION_FOR_BOX_NOTELIST,
+				box.NewBoxHandler().ShowConversationNoteList,
+			)
+
+			b.GET(
+				restapi.LOCATION_FOR_BOX_SHOW,
+				box.NewBoxHandler().ShowConversationNote,
+			)
+
 			b.DELETE(
 				restapi.LOCATION_FOR_BOX_CONVERSATION,
 				box.NewBoxHandler().DeleteConversation,
