@@ -25,7 +25,7 @@ type testJSON struct {
 // ShowConversation godoc
 // @Summary      노트를 주고 받는 대화방 목록 조회(최대 3개)
 // @Description  노트를 주고 받는 대화방 목록 조회(최대 3개)
-// @Tags         Write 페이지
+// @Tags         Box 페이지
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
@@ -73,7 +73,7 @@ func (h *BoxHandler) ShowConversation(c *gin.Context) {
 // ShowConversationNoteList godoc
 // @Summary      특정 친구와 주고받은 노트 목록
 // @Description  특정 친구와 주고받은 노트 목록
-// @Tags         Write 페이지
+// @Tags         Box 페이지
 // @Security	 BasicAuth
 // @Param        id  query     string  false  "conversation id"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -120,7 +120,7 @@ func (h *BoxHandler) ShowConversationNoteList(c *gin.Context) {
 // ShowConversationNote godoc
 // @Summary      특정 노트 조회
 // @Description  특정 노트 조회
-// @Tags         Write 페이지
+// @Tags         Box 페이지
 // @Security	 BasicAuth
 // @Param        id  query     string  false  "note id"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -157,7 +157,7 @@ func (h *BoxHandler) ShowConversationNote(c *gin.Context) {
 // DeleteConversation godoc
 // @Summary      특정 대화방 삭제
 // @Description  특정 대화방 삭제
-// @Tags         Write 페이지
+// @Tags         Box 페이지
 // @Security	 BasicAuth
 // @Param        id  query     string  false  "conversation id"
 // @Success      200  {object}  restapi.DefaultResponse ""

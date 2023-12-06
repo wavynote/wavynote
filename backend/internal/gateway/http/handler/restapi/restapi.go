@@ -76,23 +76,26 @@ type DefaultResponse struct {
 	Msg    string `json:"msg"`                   // 실패 시 반환하는 에러 메시지
 }
 
+type FolderInfo struct {
+	FolderId   string `json:"folder_id" example:"a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b"` // 폴더의 고유 id 값
+	UserId     string `json:"user_id" example:"wavynoteadmin@gmail.com"`                // 폴더를 소유하고 있는 사용자 ID
+	FolderName string `json:"folder_name" example:"whatever"`                           // 폴더 이름
+}
+
 type FolderSimpleInfo struct {
 	FolderId   string `json:"folder_id" example:"a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b"` // 폴더의 고유 id 값
 	FolderName string `json:"folder_name" example:"my diary"`                           // 폴더 이름
 	NoteCount  int    `json:"note_count" example:"5"`                                   // 폴더에 존재하는 노트의 총 개수
 }
 
-type FolderInfo struct {
-}
-
 type FolderListResponse struct {
 	Folders []FolderSimpleInfo `json:"data"`
 }
 
-type NoteSimpleInfo struct {
-	NoteId  string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`          // 해당 폴더에 존재하는 노트의 고유 id 값
-	Title   string `json:"title" example:"my first note"`                                   // 해당 폴더에 존재하는 노트의 제목
-	Preview string `json:"preview" example:"This is the main text of my first wavey note."` // 해당 폴더에 존재하는 노트의 본문 미리보기(글자수 제한)
+type ChangeFolderNameRequest struct {
+	FolderId   string `json:"folder_id" example:"a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b"` // 이름을 변경할 폴더의 고유 id 값
+	UserId     string `json:"user_id" example:"wavynoteadmin@gmail.com"`                // 이름을 변경할 폴더를 소유하고 있는 사용자 ID
+	FolderName string `json:"folder_name" example:"whatever"`                           // 변경할 폴더 이름
 }
 
 type NoteInfo struct {
@@ -107,8 +110,41 @@ type NoteInfo struct {
 	Keywords []string `json:"" example:"sport"`                                         // 노트의 키워드
 }
 
+type NoteSimpleInfo struct {
+	NoteId  string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`          // 해당 폴더에 존재하는 노트의 고유 id 값
+	Title   string `json:"title" example:"my first note"`                                   // 해당 폴더에 존재하는 노트의 제목
+	Preview string `json:"preview" example:"This is the main text of my first wavey note."` // 해당 폴더에 존재하는 노트의 본문 미리보기(글자수 제한)
+}
+
 type NoteListResponse struct {
 	Notes []NoteSimpleInfo `json:"data"`
+}
+
+type SaveNoteRequest struct {
+	FolderId string   `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"`        // 내가 쓴 노트가 포함되어 있는 폴더의 고유 id 값
+	FromId   string   `json:"from_id" example:"wavynoteadmin@gmail.com"`                       // 작성자의 id
+	SaveAt   string   `json:"save_at" example:"2023-11-01 21:00:00"`                           // 노트 저장 시점의 timestamp 정보
+	Title    string   `json:"title" example:"my first note"`                                   // 내가 쓴 노트의 제목
+	Content  string   `json:"content" example:"This is the main text of my first wavey note."` // 내가 쓴 노트의 본문 내용
+	Keywords []string `json:"keywords" example:"sport"`                                        // 내가 쓴 노트의 키워드
+}
+
+type SendNoteRequest struct {
+	NoteId         string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`         // 내가 쓴 노트의 고유 id 값
+	FromId         string `json:"from_id" example:"wavynoteadmin@gmail.com"`                      // 작성자의 id
+	ToId           string `json:"to_id" example:"somebody@naver.com"`                             // 내가 쓴 노트를 보내는 대상의 id
+	ConversationId string `json:"conversation_id" example:"1afc571d-61bf-4cef-95ce-ab791f999297"` // 대화방의 고유 id 값
+	SendAt         string `json:"send_at" example:"2023-11-01 23:20:12"`                          // 보낸 시간
+}
+
+type ShareNoteRequest struct {
+	NoteId string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"` // 오픈 노트에 공유할 노트의 고유 id 값
+	HostId string `json:"host_id" example:"wavynoteadmin@gmail.com"`              // 오픈 노트에 공유한 사용자 id
+}
+
+type RandomMatchRequest struct {
+	NoteId string `json:"note_id": example:"09d05df1-2958-4a3d-b910-3b4fb079327b"` // 랜덤 매칭을 통해 임의의 대상에게 보낼 노트의 고유 id 값
+	FromId string `json:"from_id": example:"wavynoteadmin@gmail.com"`              // 노트를 보내는 사용자의 id
 }
 
 type ConversationInfo struct {

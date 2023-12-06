@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	httpServer := http.NewHTTPServer("", 6770, "server.crt", "server.key", 3600, 3600)
+	httpServer := http.NewHTTPServer("", 16770, "server.crt", "server.key", 3600, 3600)
 	httpServer.StartServer()
 }

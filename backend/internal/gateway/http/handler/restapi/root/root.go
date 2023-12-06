@@ -99,6 +99,7 @@ func (h *RootHandler) GetNoteList(c *gin.Context) {
 // @Summary      특정 폴더 이름 변경
 // @Description  특정 폴더 이름 변경
 // @Tags         Main 페이지
+// @Param        body body      restapi.ChangeFolderNameRequest  true  "변경하고자 하는 폴더 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"

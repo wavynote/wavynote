@@ -22,6 +22,7 @@ func NewWriteHandler() *WriteHandler {
 // @Description  내가 쓴 노트 저장
 // @Tags         Write 페이지
 // @Security	 BasicAuth
+// @Param        body body      restapi.SaveNoteRequest  true  "저장할 노트 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
@@ -48,6 +49,7 @@ func (h *WriteHandler) SaveNote(c *gin.Context) {
 // @Description  내가 쓴 노트를 특정 대상에게 보내기
 // @Tags         Write 페이지
 // @Security	 BasicAuth
+// @Param        body body      restapi.SendNoteRequest  true  "특정 대상에게 보낼 노트 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
@@ -74,6 +76,7 @@ func (h *WriteHandler) SendNote(c *gin.Context) {
 // @Description  내가 쓴 노트를 오픈 노트에 공유하기
 // @Tags         Write 페이지
 // @Security	 BasicAuth
+// @Param        body body      restapi.ShareNoteRequest  true  "오픈 노트에 공유를 위한 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
@@ -100,6 +103,7 @@ func (h *WriteHandler) ShareToOpenNote(c *gin.Context) {
 // @Description  내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기
 // @Tags         Write 페이지
 // @Security	 BasicAuth
+// @Param        body body      restapi.RandomMatchRequest  true  "랜덤 매칭을 통해 보낼 노트 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
