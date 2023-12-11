@@ -7,13 +7,18 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/wavynote/internal/gateway/http/handler/restapi"
+	"github.com/wavynote/internal/platform/dbmsadapter/postgres"
+	"github.com/wavynote/internal/wavynote"
 )
 
 type RootHandler struct {
+	dbInfo wavynote.DataBaseInfo
 }
 
-func NewRootHandler() *RootHandler {
-	h := &RootHandler{}
+func NewRootHandler(dbInfo wavynote.DataBaseInfo) *RootHandler {
+	h := &RootHandler{
+		dbInfo: dbInfo,
+	}
 	return h
 }
 
@@ -22,6 +27,7 @@ func NewRootHandler() *RootHandler {
 // @Description  존재하는 모든 폴더 목록 조회
 // @Tags         Main 페이지
 // @Security	 BasicAuth
+// @Param        id   query     string  false  "user id"
 // @Success      200  {object}  restapi.FolderListResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
@@ -33,6 +39,26 @@ func (h *RootHandler) GetFolderList(c *gin.Context) {
 	if err == nil {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
+
+	userId := c.Query("id")
+	fmt.Println("user_id:", userId)
+
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			//
+		}
+	}()
 
 	folderList := []restapi.FolderSimpleInfo{}
 	folderList = append(folderList, restapi.FolderSimpleInfo{
@@ -59,6 +85,7 @@ func (h *RootHandler) GetFolderList(c *gin.Context) {
 // @Description  특정 폴더에 존재하는 모든 노트 조회
 // @Tags         Main 페이지
 // @Security	 BasicAuth
+// @Param        uid  query     string  false  "user id"
 // @Param        fid  query     string  false  "folder id"
 // @Success      200  {object}  restapi.NoteListResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
@@ -71,6 +98,9 @@ func (h *RootHandler) GetNoteList(c *gin.Context) {
 	if err == nil {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
+
+	userId := c.Query("uid")
+	fmt.Println("user_id:", userId)
 
 	folderId := c.Query("fid")
 	fmt.Println("folder_id:", folderId)
@@ -126,6 +156,7 @@ func (h *RootHandler) ChangeFolderName(c *gin.Context) {
 // @Summary      특정 폴더 삭제
 // @Description  특정 폴더 삭제
 // @Tags         Main 페이지
+// @Param        body body      restapi.RemoveFolderRequest  true  "삭제할 폴다 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
@@ -152,6 +183,7 @@ func (h *RootHandler) RemoveFolder(c *gin.Context) {
 // @Summary      내가 쓴 특정 노트 삭제
 // @Description  내가 쓴 특정 노트 삭제
 // @Tags         Main 페이지
+// @Param        body body      restapi.RemoveNoteRequest  true  "삭제할 노트 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"

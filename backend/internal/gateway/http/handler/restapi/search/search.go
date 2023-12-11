@@ -7,13 +7,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/wavynote/internal/gateway/http/handler/restapi"
+	"github.com/wavynote/internal/wavynote"
 )
 
 type SearchHandler struct {
+	dbInfo wavynote.DataBaseInfo
 }
 
-func NewSearchHandler() *SearchHandler {
-	h := &SearchHandler{}
+func NewSearchHandler(dbInfo wavynote.DataBaseInfo) *SearchHandler {
+	h := &SearchHandler{
+		dbInfo: dbInfo,
+	}
 	return h
 }
 
@@ -22,6 +26,7 @@ func NewSearchHandler() *SearchHandler {
 // @Description  전체 폴더를 대상으로 노트 내용 검색
 // @Tags         Main 페이지
 // @Security	 BasicAuth
+// @Param        id     query     string  false  "user id"
 // @Param        query  query     string  false  "query for search"
 // @Success      200  {object}  restapi.NoteListResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
@@ -34,6 +39,9 @@ func (h *SearchHandler) SearchNoteFromTop(c *gin.Context) {
 	if err == nil {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
+
+	userId := c.Query("id")
+	fmt.Println("userId:", userId)
 
 	query := c.Query("query")
 	fmt.Println("query:", query)
@@ -77,9 +85,9 @@ func (h *SearchHandler) SearchNoteFromTargetFolder(c *gin.Context) {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
 
-	id := c.Query("id")
+	folderId := c.Query("id")
 	query := c.Query("query")
-	fmt.Println("id:", id)
+	fmt.Println("folder_id:", folderId)
 	fmt.Println("query:", query)
 
 	noteList := []restapi.NoteSimpleInfo{}

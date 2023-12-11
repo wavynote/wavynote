@@ -1,19 +1,27 @@
 package write
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wavynote/internal/gateway/http/handler/restapi"
+	"github.com/wavynote/internal/platform/dbmsadapter/postgres"
+	"github.com/wavynote/internal/wavynote"
 )
 
 type WriteHandler struct {
+	dbInfo wavynote.DataBaseInfo
 }
 
-func NewWriteHandler() *WriteHandler {
-	h := &WriteHandler{}
+func NewWriteHandler(dbInfo wavynote.DataBaseInfo) *WriteHandler {
+	h := &WriteHandler{
+		dbInfo: dbInfo,
+	}
 	return h
 }
 
@@ -28,11 +36,87 @@ func NewWriteHandler() *WriteHandler {
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
 // @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"
 // @Failure      500  {object}  restapi.Response500 "요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다"
-// @Router       /write/note [post]
+// @Router       /write/save [post]
 func (h *WriteHandler) SaveNote(c *gin.Context) {
 	dmp, err := httputil.DumpRequest(c.Request, true)
 	if err == nil {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
+	}
+
+	var reqInfo *restapi.SaveNoteRequest
+
+	err = c.BindJSON(&reqInfo)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, restapi.Response400{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+	}
+
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var tx *sql.Tx
+	defer func() {
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var keywordList []string
+	for _, keyword := range reqInfo.Keywords {
+		keywordList = append(keywordList, fmt.Sprintf("'%s'", keyword))
+	}
+	fmt.Println(keywordList)
+
+	query := fmt.Sprintf(`
+		INSERT INTO public.note(id, folder_id, from_id, save_at, title, contents, keywords)
+		VALUES(uuid_generate_v4(), '%s', '%s', '%s', '%s', '%s', ARRAY[%s]::uuid[])
+	`, reqInfo.FolderId, reqInfo.FromId, time.Now().Format("2006-01-02 15:04:05"), reqInfo.Title, reqInfo.Content, strings.Join(keywordList, ","))
+
+	_, err = db.ExecTx(tx, query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
 	}
 
 	c.IndentedJSON(
