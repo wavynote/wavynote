@@ -24,7 +24,7 @@ func NewSearchHandler(dbInfo wavynote.DataBaseInfo) *SearchHandler {
 // SearchNoteFromTop godoc
 // @Summary      전체 폴더를 대상으로 노트 내용 검색
 // @Description  전체 폴더를 대상으로 노트 내용 검색
-// @Tags         Main 페이지
+// @Tags         Main 페이지 - Search
 // @Security	 BasicAuth
 // @Param        id     query     string  false  "user id"
 // @Param        query  query     string  false  "query for search"
@@ -69,7 +69,7 @@ func (h *SearchHandler) SearchNoteFromTop(c *gin.Context) {
 // SearchNoteFromTargetFolder godoc
 // @Summary      전체 폴더를 대상으로 노트 내용 검색
 // @Description  전체 폴더를 대상으로 노트 내용 검색
-// @Tags         Main 페이지
+// @Tags         Main 페이지 - Search
 // @Security	 BasicAuth
 // @Param        id  query     string  false  "target folder id"
 // @Param        query  query     string  false  "query for search"

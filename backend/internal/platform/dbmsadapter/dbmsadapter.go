@@ -26,6 +26,7 @@ type DbmsadapterService interface {
 	GetBigInteger(interface{}) int64
 	GetBytes(interface{}) []byte
 	GetUUID(interface{}) string
+	GetArray(interface{}) []string
 
 	// 무결성 체크 함수 제공
 	CheckDBIntegrity() bool

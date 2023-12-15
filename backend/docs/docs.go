@@ -33,8 +33,14 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "user id",
+                        "name": "uid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "conversation id",
-                        "name": "id",
+                        "name": "cid",
                         "in": "query"
                     }
                 ],
@@ -94,9 +100,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "조회된 대화방 목록 정보",
                         "schema": {
-                            "$ref": "#/definitions/restapi.DefaultResponse"
+                            "$ref": "#/definitions/restapi.ConversationListResponse"
                         }
                     },
                     "400": {
@@ -195,16 +201,22 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "conversation id",
+                        "name": "cid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "note id",
-                        "name": "id",
+                        "name": "nid",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "조회한 노트 정보",
                         "schema": {
-                            "$ref": "#/definitions/restapi.DefaultResponse"
+                            "$ref": "#/definitions/restapi.NoteInfo"
                         }
                     },
                     "400": {
@@ -235,7 +247,7 @@ const docTemplate = `{
             }
         },
         "/main/folder": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "BasicAuth": []
@@ -243,7 +255,7 @@ const docTemplate = `{
                 ],
                 "description": "특정 폴더 이름 변경",
                 "tags": [
-                    "Main 페이지"
+                    "Main 페이지 - Folder"
                 ],
                 "summary": "특정 폴더 이름 변경",
                 "parameters": [
@@ -290,6 +302,61 @@ const docTemplate = `{
                     }
                 }
             },
+            "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "폴더 추가",
+                "tags": [
+                    "Main 페이지 - Folder"
+                ],
+                "summary": "폴더 추가",
+                "parameters": [
+                    {
+                        "description": "추가할 폴더 정보",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/restapi.AddFolderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.DefaultResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "요청에 포함된 파라미터 값이 잘못된 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response400"
+                        }
+                    },
+                    "401": {
+                        "description": "인증에 실패한 경우이며, 실패 사유가 전달됩니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response401"
+                        }
+                    },
+                    "404": {
+                        "description": "요청한 리소스가 서버에 존재하지 않는 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response404"
+                        }
+                    },
+                    "500": {
+                        "description": "요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response500"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "security": [
                     {
@@ -298,7 +365,7 @@ const docTemplate = `{
                 ],
                 "description": "특정 폴더 삭제",
                 "tags": [
-                    "Main 페이지"
+                    "Main 페이지 - Folder"
                 ],
                 "summary": "특정 폴더 삭제",
                 "parameters": [
@@ -355,7 +422,7 @@ const docTemplate = `{
                 ],
                 "description": "존재하는 모든 폴더 목록 조회",
                 "tags": [
-                    "Main 페이지"
+                    "Main 페이지 - Folder"
                 ],
                 "summary": "존재하는 모든 폴더 목록 조회",
                 "parameters": [
@@ -409,7 +476,7 @@ const docTemplate = `{
                 ],
                 "description": "내가 쓴 특정 노트 삭제",
                 "tags": [
-                    "Main 페이지"
+                    "Main 페이지 - Note"
                 ],
                 "summary": "내가 쓴 특정 노트 삭제",
                 "parameters": [
@@ -457,6 +524,63 @@ const docTemplate = `{
                 }
             }
         },
+        "/main/notefolder": {
+            "put": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "노트가 저장되는 폴더 변경",
+                "tags": [
+                    "Main 페이지 - Note"
+                ],
+                "summary": "노트가 저장되는 폴더 변경",
+                "parameters": [
+                    {
+                        "description": "노트를 저장할 (변경할)폴더 정보",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/restapi.ChangeNoteFolderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.DefaultResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "요청에 포함된 파라미터 값이 잘못된 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response400"
+                        }
+                    },
+                    "401": {
+                        "description": "인증에 실패한 경우이며, 실패 사유가 전달됩니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response401"
+                        }
+                    },
+                    "404": {
+                        "description": "요청한 리소스가 서버에 존재하지 않는 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response404"
+                        }
+                    },
+                    "500": {
+                        "description": "요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response500"
+                        }
+                    }
+                }
+            }
+        },
         "/main/notelist": {
             "get": {
                 "security": [
@@ -466,7 +590,7 @@ const docTemplate = `{
                 ],
                 "description": "특정 폴더에 존재하는 모든 노트 조회",
                 "tags": [
-                    "Main 페이지"
+                    "Main 페이지 - Note"
                 ],
                 "summary": "특정 폴더에 존재하는 모든 노트 조회",
                 "parameters": [
@@ -694,7 +818,7 @@ const docTemplate = `{
                 ],
                 "description": "전체 폴더를 대상으로 노트 내용 검색",
                 "tags": [
-                    "Main 페이지"
+                    "Main 페이지 - Search"
                 ],
                 "summary": "전체 폴더를 대상으로 노트 내용 검색",
                 "parameters": [
@@ -754,7 +878,7 @@ const docTemplate = `{
                 ],
                 "description": "전체 폴더를 대상으로 노트 내용 검색",
                 "tags": [
-                    "Main 페이지"
+                    "Main 페이지 - Search"
                 ],
                 "summary": "전체 폴더를 대상으로 노트 내용 검색",
                 "parameters": [
@@ -920,6 +1044,61 @@ const docTemplate = `{
             }
         },
         "/write/save": {
+            "put": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "내가 쓴 노트 갱신",
+                "tags": [
+                    "Write 페이지"
+                ],
+                "summary": "내가 쓴 노트 갱신",
+                "parameters": [
+                    {
+                        "description": "갱신할 노트 정보",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/restapi.UpdateNoteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.DefaultResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "요청에 포함된 파라미터 값이 잘못된 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response400"
+                        }
+                    },
+                    "401": {
+                        "description": "인증에 실패한 경우이며, 실패 사유가 전달됩니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response401"
+                        }
+                    },
+                    "404": {
+                        "description": "요청한 리소스가 서버에 존재하지 않는 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response404"
+                        }
+                    },
+                    "500": {
+                        "description": "요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다",
+                        "schema": {
+                            "$ref": "#/definitions/restapi.Response500"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -1048,8 +1227,14 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "user id",
+                        "name": "uid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "note id",
-                        "name": "id",
+                        "name": "nid",
                         "in": "query"
                     }
                 ],
@@ -1089,6 +1274,19 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "restapi.AddFolderRequest": {
+            "type": "object",
+            "properties": {
+                "folder_name": {
+                    "type": "string",
+                    "example": "my wavywavy"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "wavynoteadmin@gmail.com"
+                }
+            }
+        },
         "restapi.ChangeFolderNameRequest": {
             "type": "object",
             "properties": {
@@ -1106,6 +1304,58 @@ const docTemplate = `{
                     "description": "이름을 변경할 폴더를 소유하고 있는 사용자 ID",
                     "type": "string",
                     "example": "wavynoteadmin@gmail.com"
+                }
+            }
+        },
+        "restapi.ChangeNoteFolderRequest": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/restapi.NoteFolderInfo"
+                    }
+                },
+                "folder_id": {
+                    "description": "노트가 저장되는 폴더의 고유 id 값",
+                    "type": "string",
+                    "example": "980e71ba-0395-49aa-833e-3ebc76b3ec88"
+                }
+            }
+        },
+        "restapi.ConversationInfo": {
+            "type": "object",
+            "properties": {
+                "conversation_id": {
+                    "description": "대화방 고유의 id 값",
+                    "type": "string",
+                    "example": "1afc571d-61bf-4cef-95ce-ab791f999297"
+                },
+                "new_note": {
+                    "description": "대화방에 읽지않은 노트가 존재하는지 여부",
+                    "type": "boolean",
+                    "example": true
+                },
+                "note_count": {
+                    "description": "대화방에 존재하는 노트의 총 개수",
+                    "type": "integer",
+                    "example": 20
+                },
+                "opp_nickname": {
+                    "description": "대화 상대의 별명",
+                    "type": "string",
+                    "example": "somebody"
+                }
+            }
+        },
+        "restapi.ConversationListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/restapi.ConversationInfo"
+                    }
                 }
             }
         },
@@ -1154,6 +1404,81 @@ const docTemplate = `{
                 }
             }
         },
+        "restapi.NoteFolderInfo": {
+            "type": "object",
+            "properties": {
+                "note_id": {
+                    "description": "폴더를 변경할 노트의 고유 id 값",
+                    "type": "string",
+                    "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
+                },
+                "user_id": {
+                    "description": "사용자 id",
+                    "type": "string",
+                    "example": "wavynoteadmin@gmail.com"
+                }
+            }
+        },
+        "restapi.NoteInfo": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "노트의 본문 내용",
+                    "type": "string",
+                    "example": "This is the main text of my first wavy note."
+                },
+                "conversation_id": {
+                    "description": "대화방의 고유 id 값",
+                    "type": "string",
+                    "example": ""
+                },
+                "folder_id": {
+                    "description": "노트가 포함되어 있는 폴더의 고유 id 값",
+                    "type": "string",
+                    "example": "980e71ba-0395-49aa-833e-3ebc76b3ec88"
+                },
+                "from_id": {
+                    "description": "노트 작성자(또는 송신자)의 id",
+                    "type": "string",
+                    "example": "wavynoteadmin@gmail.com"
+                },
+                "keywords": {
+                    "description": "노트의 키워드",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "b0d88d67-01fd-47f8-b426-6ca0657d0f6e"
+                    ]
+                },
+                "note_id": {
+                    "description": "노트의 고유 id 값",
+                    "type": "string",
+                    "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
+                },
+                "save_at": {
+                    "description": "노트를 저장한 마지막 날짜 및 시간 정보",
+                    "type": "string",
+                    "example": "2023-11-01 21:00:00"
+                },
+                "send_at": {
+                    "description": "노트를 송신한 날짜 및 시간 정보",
+                    "type": "string",
+                    "example": "2023-11-01 23:20:12"
+                },
+                "title": {
+                    "description": "노트의 제목",
+                    "type": "string",
+                    "example": "my first note"
+                },
+                "to_id": {
+                    "description": "노트 수신자의 id",
+                    "type": "string",
+                    "example": "somebody@naver.com"
+                }
+            }
+        },
         "restapi.NoteListResponse": {
             "type": "object",
             "properties": {
@@ -1162,10 +1487,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/restapi.NoteSimpleInfo"
                     }
-                },
-                "user_id": {
-                    "type": "string",
-                    "example": "wavynoteadmin@gmail.com"
                 }
             }
         },
@@ -1180,7 +1501,7 @@ const docTemplate = `{
                 "preview": {
                     "description": "해당 폴더에 존재하는 노트의 본문 미리보기(글자수 제한)",
                     "type": "string",
-                    "example": "This is the main text of my first wavey note."
+                    "example": "This is the main text of my first wavy note."
                 },
                 "title": {
                     "description": "해당 폴더에 존재하는 노트의 제목",
@@ -1322,7 +1643,7 @@ const docTemplate = `{
                 "content": {
                     "description": "내가 쓴 노트의 본문 내용",
                     "type": "string",
-                    "example": "This is the main text of my first wavey note."
+                    "example": "This is the main text of my first wavy note."
                 },
                 "folder_id": {
                     "description": "내가 쓴 노트가 포함되어 있는 폴더의 고유 id 값",
@@ -1343,11 +1664,6 @@ const docTemplate = `{
                     "example": [
                         "b0d88d67-01fd-47f8-b426-6ca0657d0f6e"
                     ]
-                },
-                "save_at": {
-                    "description": "노트 저장 시점의 timestamp 정보",
-                    "type": "string",
-                    "example": "2023-11-01 21:00:00"
                 },
                 "title": {
                     "description": "내가 쓴 노트의 제목",
@@ -1373,11 +1689,6 @@ const docTemplate = `{
                     "description": "내가 쓴 노트의 고유 id 값",
                     "type": "string",
                     "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
-                },
-                "send_at": {
-                    "description": "보낸 시간",
-                    "type": "string",
-                    "example": "2023-11-01 23:20:12"
                 },
                 "to_id": {
                     "description": "내가 쓴 노트를 보내는 대상의 id",
@@ -1406,6 +1717,46 @@ const docTemplate = `{
         },
         "restapi.SignUpRequest": {
             "type": "object"
+        },
+        "restapi.UpdateNoteRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "내가 쓴 노트의 본문 내용",
+                    "type": "string",
+                    "example": "This is the main text of my first wavy note."
+                },
+                "folder_id": {
+                    "description": "내가 쓴 노트가 포함되어 있는 폴더의 고유 id 값",
+                    "type": "string",
+                    "example": "980e71ba-0395-49aa-833e-3ebc76b3ec88"
+                },
+                "from_id": {
+                    "description": "작성자의 id",
+                    "type": "string",
+                    "example": "wavynoteadmin@gmail.com"
+                },
+                "keywords": {
+                    "description": "내가 쓴 노트의 키워드",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "b0d88d67-01fd-47f8-b426-6ca0657d0f6e"
+                    ]
+                },
+                "note_id": {
+                    "description": "내가 쓴 노트의 고유 id 값",
+                    "type": "string",
+                    "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
+                },
+                "title": {
+                    "description": "내가 쓴 노트의 제목",
+                    "type": "string",
+                    "example": "my first note"
+                }
+            }
         }
     },
     "securityDefinitions": {

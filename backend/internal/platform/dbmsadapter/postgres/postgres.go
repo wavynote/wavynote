@@ -289,6 +289,26 @@ func (d *DbmsadapterService) GetBoolean(col interface{}) bool {
 	return buf
 }
 
+func (d *DbmsadapterService) GetArray(col interface{}) []string {
+	if col == nil {
+		fmt.Println("1111")
+		return []string{}
+	}
+
+	// arr 값 예시
+	//  - {7846a984-8818-41f0-81c8-a5ab0d840e33,39a75826-d2dd-435b-8da2-f0e40db45877}
+	arr := fmt.Sprintf("%s", col)
+
+	// 1. 양 끝의 중괄호 제거
+	arr = strings.TrimLeft(arr, "{")
+	arr = strings.TrimRight(arr, "}")
+
+	// 2. 콤마 기준으로 Split
+	result := strings.Split(arr, ",")
+
+	return result
+}
+
 func (d *DbmsadapterService) CheckDBIntegrity() bool {
 	return true
 }

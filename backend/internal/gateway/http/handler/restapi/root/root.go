@@ -1,6 +1,7 @@
 package root
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -25,7 +26,7 @@ func NewRootHandler(dbInfo wavynote.DataBaseInfo) *RootHandler {
 // GetFolderList godoc
 // @Summary      존재하는 모든 폴더 목록 조회
 // @Description  존재하는 모든 폴더 목록 조회
-// @Tags         Main 페이지
+// @Tags         Main 페이지 - Folder
 // @Security	 BasicAuth
 // @Param        id   query     string  false  "user id"
 // @Success      200  {object}  restapi.FolderListResponse ""
@@ -60,17 +61,51 @@ func (h *RootHandler) GetFolderList(c *gin.Context) {
 		}
 	}()
 
-	folderList := []restapi.FolderSimpleInfo{}
-	folderList = append(folderList, restapi.FolderSimpleInfo{
-		FolderId:   "a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b",
-		FolderName: "생각정리",
-		NoteCount:  5,
-	})
-	folderList = append(folderList, restapi.FolderSimpleInfo{
-		FolderId:   "980e71ba-0395-49aa-833e-3ebc76b3ec88",
-		FolderName: "나의웨이비노트",
-		NoteCount:  3,
-	})
+	query := fmt.Sprintf(`
+		SELECT id, name
+		FROM public.folder
+		WHERE user_id = '%s'
+		ORDER BY name
+	`, userId)
+
+	var folderList []restapi.FolderSimpleInfo
+	rows, err := db.SelectQuery(query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	} else {
+		for i := 0; i < len(rows); i++ {
+			folderId := db.GetUUID(rows[i]["id"])
+			// note 테이블에서 동일한 folder_id를 갖는 row의 개수 조회
+			noteCount := 0
+			innerQuery := fmt.Sprintf(`
+				SELECT count(*) AS cnt
+				FROM public.note
+				WHERE folder_id = '%s'
+			`, folderId)
+			row, err := db.SelectQuery(innerQuery)
+			if err != nil {
+				c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+					Code: http.StatusInternalServerError,
+					Msg:  err.Error(),
+				})
+				return
+			} else {
+				for j := 0; j < len(row); j++ {
+					noteCount = db.GetInteger(row[j]["cnt"])
+				}
+			}
+
+			folderList = append(folderList, restapi.FolderSimpleInfo{
+				FolderId:   folderId,
+				FolderName: db.GetString(rows[i]["name"]),
+				NoteCount:  noteCount,
+			})
+		}
+	}
 
 	c.IndentedJSON(
 		http.StatusOK,
@@ -83,7 +118,7 @@ func (h *RootHandler) GetFolderList(c *gin.Context) {
 // GetNoteList godoc
 // @Summary      특정 폴더에 존재하는 모든 노트 조회
 // @Description  특정 폴더에 존재하는 모든 노트 조회
-// @Tags         Main 페이지
+// @Tags         Main 페이지 - Note
 // @Security	 BasicAuth
 // @Param        uid  query     string  false  "user id"
 // @Param        fid  query     string  false  "folder id"
@@ -105,17 +140,47 @@ func (h *RootHandler) GetNoteList(c *gin.Context) {
 	folderId := c.Query("fid")
 	fmt.Println("folder_id:", folderId)
 
-	noteList := []restapi.NoteSimpleInfo{}
-	noteList = append(noteList, restapi.NoteSimpleInfo{
-		NoteId:  "a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b",
-		Title:   "나의첫번째노트",
-		Preview: "나의 첫 웨이비노트 본문 내용입니다.",
-	})
-	noteList = append(noteList, restapi.NoteSimpleInfo{
-		NoteId:  "1a092b35-dc9e-472e-be39-7391ca176040",
-		Title:   "나의두번째노트",
-		Preview: "나의 두번째 웨이비노트 본문 내용입니다.",
-	})
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	query := fmt.Sprintf(`
+		SELECT id, title, contents
+		FROM public.note
+		WHERE from_id = '%s' AND folder_id = '%s'
+		ORDER BY save_at
+	`, userId, folderId)
+
+	var noteList []restapi.NoteSimpleInfo
+	rows, err := db.SelectQuery(query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	} else {
+		for i := 0; i < len(rows); i++ {
+			noteList = append(noteList, restapi.NoteSimpleInfo{
+				NoteId:  db.GetUUID(rows[i]["id"]),
+				Title:   db.GetString(rows[i]["title"]),
+				Preview: db.GetString(rows[i]["contents"])[0:20], // preview는 본문의 시작부터 최대 20자까지 제공
+			})
+		}
+	}
 
 	c.IndentedJSON(
 		http.StatusOK,
@@ -125,11 +190,110 @@ func (h *RootHandler) GetNoteList(c *gin.Context) {
 	)
 }
 
-// ChangeFolderName godoc
-// @Summary      특정 폴더 이름 변경
-// @Description  특정 폴더 이름 변경
-// @Tags         Main 페이지
-// @Param        body body      restapi.ChangeFolderNameRequest  true  "변경하고자 하는 폴더 정보"
+// ChangeNoteFolder godoc
+// @Summary      노트가 저장되는 폴더 변경
+// @Description  노트가 저장되는 폴더 변경
+// @Tags         Main 페이지 - Note
+// @Param        body body      restapi.ChangeNoteFolderRequest  true  "노트를 저장할 (변경할)폴더 정보"
+// @Security	 BasicAuth
+// @Success      200  {object}  restapi.DefaultResponse ""
+// @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
+// @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
+// @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"
+// @Failure      500  {object}  restapi.Response500 "요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다"
+// @Router       /main/notefolder [put]
+func (h *RootHandler) ChangeNoteFolder(c *gin.Context) {
+	dmp, err := httputil.DumpRequest(c.Request, true)
+	if err == nil {
+		fmt.Printf("dump request:\n%s\n", string(dmp))
+	}
+
+	var reqInfo *restapi.ChangeNoteFolderRequest
+
+	err = c.BindJSON(&reqInfo)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, restapi.Response400{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+	}
+
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var tx *sql.Tx
+	defer func() {
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	for _, noteInfo := range reqInfo.Notes {
+		query := fmt.Sprintf(`
+			UPDATE public.note SET folder_id = '%s'
+			WHERE id = '%s' AND from_id = '%s'
+		`, reqInfo.FolderId, noteInfo.NoteId, noteInfo.UserId)
+
+		_, err = db.ExecTx(tx, query)
+		if err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+				Code: http.StatusInternalServerError,
+				Msg:  err.Error(),
+			})
+			return
+		}
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	c.IndentedJSON(
+		http.StatusOK,
+		restapi.DefaultResponse{
+			Result: "true",
+			Msg:    "",
+		},
+	)
+}
+
+// AddFolder godoc
+// @Summary      폴더 추가
+// @Description  폴더 추가
+// @Tags         Main 페이지 - Folder
+// @Param        body body      restapi.AddFolderRequest  true  "추가할 폴더 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
@@ -137,17 +301,155 @@ func (h *RootHandler) GetNoteList(c *gin.Context) {
 // @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"
 // @Failure      500  {object}  restapi.Response500 "요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다"
 // @Router       /main/folder [post]
-func (h *RootHandler) ChangeFolderName(c *gin.Context) {
+func (h *RootHandler) AddFolder(c *gin.Context) {
 	dmp, err := httputil.DumpRequest(c.Request, true)
 	if err == nil {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
+	}
+
+	var reqInfo *restapi.AddFolderRequest
+
+	err = c.BindJSON(&reqInfo)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, restapi.Response400{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+	}
+
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	query := fmt.Sprintf(`
+		INSERT INTO public.folder(id, user_id, name) 
+		VALUES (uuid_generate_v4(), '%s', '%s')
+	`, reqInfo.UserId, reqInfo.FolderName)
+
+	_, err = db.ExecuteQuery(query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
 	}
 
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "특정 폴더 이름 변경",
+			Msg:    "",
+		},
+	)
+}
+
+// ChangeFolderName godoc
+// @Summary      특정 폴더 이름 변경
+// @Description  특정 폴더 이름 변경
+// @Tags         Main 페이지 - Folder
+// @Param        body body      restapi.ChangeFolderNameRequest  true  "변경하고자 하는 폴더 정보"
+// @Security	 BasicAuth
+// @Success      200  {object}  restapi.DefaultResponse ""
+// @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
+// @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
+// @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"
+// @Failure      500  {object}  restapi.Response500 "요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다"
+// @Router       /main/folder [put]
+func (h *RootHandler) ChangeFolderName(c *gin.Context) {
+	dmp, err := httputil.DumpRequest(c.Request, true)
+	if err == nil {
+		fmt.Printf("dump request:\n%s\n", string(dmp))
+	}
+
+	var reqInfo *restapi.ChangeFolderNameRequest
+
+	err = c.BindJSON(&reqInfo)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, restapi.Response400{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+	}
+
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var tx *sql.Tx
+	defer func() {
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	query := fmt.Sprintf(`
+		UPDATE public.folder SET name = '%s'
+		WHERE id = '%s' AND user_id = '%s'
+	`, reqInfo.FolderName, reqInfo.FolderId, reqInfo.UserId)
+
+	_, err = db.ExecTx(tx, query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	c.IndentedJSON(
+		http.StatusOK,
+		restapi.DefaultResponse{
+			Result: "true",
+			Msg:    "",
 		},
 	)
 }
@@ -155,7 +457,7 @@ func (h *RootHandler) ChangeFolderName(c *gin.Context) {
 // RemoveFolder godoc
 // @Summary      특정 폴더 삭제
 // @Description  특정 폴더 삭제
-// @Tags         Main 페이지
+// @Tags         Main 페이지 - Folder
 // @Param        body body      restapi.RemoveFolderRequest  true  "삭제할 폴다 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -170,11 +472,13 @@ func (h *RootHandler) RemoveFolder(c *gin.Context) {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
 
+	// TODO: 폴더 내에 존재하던 노트들은 어떻게 처리 할 것인가?
+
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "특정 폴더 삭제",
+			Msg:    "",
 		},
 	)
 }
@@ -182,7 +486,7 @@ func (h *RootHandler) RemoveFolder(c *gin.Context) {
 // RemoveNote godoc
 // @Summary      내가 쓴 특정 노트 삭제
 // @Description  내가 쓴 특정 노트 삭제
-// @Tags         Main 페이지
+// @Tags         Main 페이지 - Note
 // @Param        body body      restapi.RemoveNoteRequest  true  "삭제할 노트 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -197,11 +501,87 @@ func (h *RootHandler) RemoveNote(c *gin.Context) {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
 
+	// 데이터 삭제하지말고 folder만 backup으로 변경해두자
+	// TODO: backup 폴더에 존재하는 노트 복구방법은? 영구삭제 시점은?
+
+	var reqInfo *restapi.RemoveNoteRequest
+
+	err = c.BindJSON(&reqInfo)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, restapi.Response400{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+	}
+
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var tx *sql.Tx
+	defer func() {
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// backup 폴더의 id는 d21c43a5-fa35-414f-92bb-b693b60aaee6로 고정임
+	for _, noteInfo := range reqInfo.RemoveNotes {
+		query := fmt.Sprintf(`
+			UPDATE public.note SET folder_id = 'd21c43a5-fa35-414f-92bb-b693b60aaee6'
+			WHERE id = '%s' AND folder_id = '%s' AND from_id = '%s'
+		`, noteInfo.NoteId, noteInfo.FolderId, reqInfo.UserId)
+
+		_, err = db.ExecTx(tx, query)
+		if err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+				Code: http.StatusInternalServerError,
+				Msg:  err.Error(),
+			})
+			return
+		}
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "내가 쓴 특정 노트 삭제",
+			Msg:    "",
 		},
 	)
 }

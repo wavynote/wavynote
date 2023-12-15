@@ -144,7 +144,19 @@ func (h *HTTPServer) StartServer() {
 				root.NewRootHandler(h.dbInfo).GetNoteList,
 			)
 
+			m.PUT(
+				restapi.LOCATION_FOR_MAIN_NOTEFOLDER,
+				restapi.BasicAuth,
+				root.NewRootHandler(h.dbInfo).ChangeNoteFolder,
+			)
+
 			m.POST(
+				restapi.LOCATION_FOR_MAIN_FOLDER,
+				restapi.BasicAuth,
+				root.NewRootHandler(h.dbInfo).AddFolder,
+			)
+
+			m.PUT(
 				restapi.LOCATION_FOR_MAIN_FOLDER,
 				restapi.BasicAuth,
 				root.NewRootHandler(h.dbInfo).ChangeFolderName,
@@ -169,6 +181,12 @@ func (h *HTTPServer) StartServer() {
 				restapi.LOCATION_FOR_WRITE_SAVE,
 				restapi.BasicAuth,
 				write.NewWriteHandler(h.dbInfo).SaveNote,
+			)
+
+			w.PUT(
+				restapi.LOCATION_FOR_WRITE_SAVE,
+				restapi.BasicAuth,
+				write.NewWriteHandler(h.dbInfo).UpdateNote,
 			)
 
 			w.POST(
