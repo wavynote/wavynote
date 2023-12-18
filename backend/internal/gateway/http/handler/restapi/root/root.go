@@ -182,6 +182,14 @@ func (h *RootHandler) GetNoteList(c *gin.Context) {
 		}
 	}
 
+	if len(noteList) == 0 {
+		c.IndentedJSON(http.StatusNotFound, restapi.Response404{
+			Code: http.StatusNotFound,
+			Msg:  "there is no note in target folder",
+		})
+		return
+	}
+
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.NoteListResponse{
@@ -216,6 +224,7 @@ func (h *RootHandler) ChangeNoteFolder(c *gin.Context) {
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),
 		})
+		return
 	}
 
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
@@ -315,6 +324,7 @@ func (h *RootHandler) AddFolder(c *gin.Context) {
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),
 		})
+		return
 	}
 
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
@@ -327,19 +337,48 @@ func (h *RootHandler) AddFolder(c *gin.Context) {
 		return
 	}
 
+	var tx *sql.Tx
 	defer func() {
-		err := db.Close()
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
 		if err != nil {
 			//
 		}
 	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
 
 	query := fmt.Sprintf(`
 		INSERT INTO public.folder(id, user_id, name) 
 		VALUES (uuid_generate_v4(), '%s', '%s')
 	`, reqInfo.UserId, reqInfo.FolderName)
 
-	_, err = db.ExecuteQuery(query)
+	_, err = db.ExecTx(tx, query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
 			Code: http.StatusInternalServerError,
@@ -383,6 +422,7 @@ func (h *RootHandler) ChangeFolderName(c *gin.Context) {
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),
 		})
+		return
 	}
 
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
@@ -458,7 +498,7 @@ func (h *RootHandler) ChangeFolderName(c *gin.Context) {
 // @Summary      특정 폴더 삭제
 // @Description  특정 폴더 삭제
 // @Tags         Main 페이지 - Folder
-// @Param        body body      restapi.RemoveFolderRequest  true  "삭제할 폴다 정보"
+// @Param        body body      restapi.RemoveFolderRequest  true  "삭제할 폴더 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
@@ -472,7 +512,96 @@ func (h *RootHandler) RemoveFolder(c *gin.Context) {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
 
+	var reqInfo *restapi.RemoveFolderRequest
+
+	err = c.BindJSON(&reqInfo)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, restapi.Response400{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
 	// TODO: 폴더 내에 존재하던 노트들은 어떻게 처리 할 것인가?
+	//  - 폴더 테이블에서 관리하는 정보가 데이터로서의 가치가 그렇게 크진않을거라 판단하여 row 자체를 삭제하도록 함
+	//  - 단, note 테이블에 포함된 folder_id 칼럼의 경우에는 백업 폴더의 uuid(d21c43a5-fa35-414f-92bb-b693b60aaee6)로 업데이트함
+
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var tx *sql.Tx
+	defer func() {
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	for _, folder := range reqInfo.RemoveFolders {
+		query := fmt.Sprintf(`
+			DELETE FROM public.folder
+			WHERE id = '%s' AND user_id = '%s'
+		`, folder.FolderId, reqInfo.UserId)
+
+		_, err = db.ExecTx(tx, query)
+		if err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+				Code: http.StatusInternalServerError,
+				Msg:  err.Error(),
+			})
+			return
+		}
+
+		query = fmt.Sprintf(`
+			UPDATE public.note SET folder_id = 'd21c43a5-fa35-414f-92bb-b693b60aaee6'
+			WHERE folder_id = '%s' AND from_id = '%s'
+		`, folder.FolderId, reqInfo.UserId)
+
+		_, err = db.ExecTx(tx, query)
+		if err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+				Code: http.StatusInternalServerError,
+				Msg:  err.Error(),
+			})
+			return
+		}
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
 
 	c.IndentedJSON(
 		http.StatusOK,
@@ -512,6 +641,7 @@ func (h *RootHandler) RemoveNote(c *gin.Context) {
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),
 		})
+		return
 	}
 
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)

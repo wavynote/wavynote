@@ -210,6 +210,12 @@ const docTemplate = `{
                         "description": "note id",
                         "name": "nid",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "uid",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -370,7 +376,7 @@ const docTemplate = `{
                 "summary": "특정 폴더 삭제",
                 "parameters": [
                     {
-                        "description": "삭제할 폴다 정보",
+                        "description": "삭제할 폴더 정보",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -720,9 +726,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "랜딩페이지 출력 시 필요한 정보",
                         "schema": {
-                            "$ref": "#/definitions/restapi.DefaultResponse"
+                            "$ref": "#/definitions/restapi.LandingPageResonse"
                         }
                     },
                     "400": {
@@ -766,7 +772,7 @@ const docTemplate = `{
                 "summary": "회원 가입 요청",
                 "parameters": [
                     {
-                        "description": "회원 가입 요청",
+                        "description": "회원 가입 요청 정보",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -777,9 +783,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "랜딩페이지 출력 시 필요한 정보",
                         "schema": {
-                            "$ref": "#/definitions/restapi.DefaultResponse"
+                            "$ref": "#/definitions/restapi.LandingPageResonse"
                         }
                     },
                     "400": {
@@ -1404,6 +1410,21 @@ const docTemplate = `{
                 }
             }
         },
+        "restapi.LandingPageResonse": {
+            "type": "object",
+            "properties": {
+                "folder_id": {
+                    "description": "랜딩 페이지에서 보여줄 폴더의 고유 id 값",
+                    "type": "string",
+                    "example": "283744fe-7074-4ffa-abc6-dae8cb786058"
+                },
+                "user_id": {
+                    "description": "사용자 id",
+                    "type": "string",
+                    "example": "somebody@naver.com"
+                }
+            }
+        },
         "restapi.NoteFolderInfo": {
             "type": "object",
             "properties": {
@@ -1713,10 +1734,54 @@ const docTemplate = `{
             }
         },
         "restapi.SignInRequest": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "로그인시 입력한 ID",
+                    "type": "string",
+                    "example": "somebody@naver.com"
+                },
+                "password": {
+                    "description": "로그인시 입력한 패스워드",
+                    "type": "string",
+                    "example": "04F0BF9AB5963706415A0EC4C0E8167EBC8640B0B9A40870CDC39BE8A8DA813B"
+                }
+            }
         },
         "restapi.SignUpRequest": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "emoji": {
+                    "description": "회원 가입시 입력한 이모지",
+                    "type": "string",
+                    "example": "😎"
+                },
+                "id": {
+                    "description": "회원 가입시 입력한 ID",
+                    "type": "string",
+                    "example": "somebody@naver.com"
+                },
+                "keywords": {
+                    "description": "회원 가입시 입력한 키워드",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "b0d88d67-01fd-47f8-b426-6ca0657d0f6e"
+                    ]
+                },
+                "nickname": {
+                    "description": "회원 가입시 입력한 닉네임",
+                    "type": "string",
+                    "example": "somebody"
+                },
+                "password": {
+                    "description": "회원 가입시 입력한 패스워드",
+                    "type": "string",
+                    "example": "04F0BF9AB5963706415A0EC4C0E8167EBC8640B0B9A40870CDC39BE8A8DA813B"
+                }
+            }
         },
         "restapi.UpdateNoteRequest": {
             "type": "object",

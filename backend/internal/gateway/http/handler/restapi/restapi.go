@@ -219,10 +219,22 @@ type ConverstaionNoteListResponse struct {
 	ConversationNotes []ConversationNoteInfo `json:"data"`
 }
 
+type LandingPageResonse struct {
+	FolderId string `json:"folder_id" example:"283744fe-7074-4ffa-abc6-dae8cb786058"` // 랜딩 페이지에서 보여줄 폴더의 고유 id 값
+	UserId   string `json:"user_id" example:"somebody@naver.com"`                     // 사용자 id
+}
+
 type SignInRequest struct {
+	Id       string `json:"id" example:"somebody@naver.com"`                                                     // 로그인시 입력한 ID
+	Password string `json:"password" example:"04F0BF9AB5963706415A0EC4C0E8167EBC8640B0B9A40870CDC39BE8A8DA813B"` // 로그인시 입력한 패스워드
 }
 
 type SignUpRequest struct {
+	Id       string   `json:"id" example:"somebody@naver.com"`                                                     // 회원 가입시 입력한 ID
+	Password string   `json:"password" example:"04F0BF9AB5963706415A0EC4C0E8167EBC8640B0B9A40870CDC39BE8A8DA813B"` // 회원 가입시 입력한 패스워드
+	NickName string   `json:"nickname" example:"somebody"`                                                         // 회원 가입시 입력한 닉네임
+	Keywords []string `json:"keywords" example:"b0d88d67-01fd-47f8-b426-6ca0657d0f6e"`                             // 회원 가입시 입력한 키워드
+	Emoji    string   `json:"emoji" example:"😎"`                                                                   // 회원 가입시 입력한 이모지
 }
 
 func BasicAuth(c *gin.Context) {

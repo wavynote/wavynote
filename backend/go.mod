@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang/gddo v0.0.0-20210115222349-20d68f94ee1f
+	github.com/google/uuid v1.5.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lib/pq v1.10.9
 	github.com/swaggo/files v1.0.1

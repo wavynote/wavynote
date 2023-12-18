@@ -46,6 +46,8 @@ func (h *SearchHandler) SearchNoteFromTop(c *gin.Context) {
 	query := c.Query("query")
 	fmt.Println("query:", query)
 
+	// TODO: 구현
+
 	noteList := []restapi.NoteSimpleInfo{}
 	noteList = append(noteList, restapi.NoteSimpleInfo{
 		NoteId:  "a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b",
@@ -89,6 +91,8 @@ func (h *SearchHandler) SearchNoteFromTargetFolder(c *gin.Context) {
 	query := c.Query("query")
 	fmt.Println("folder_id:", folderId)
 	fmt.Println("query:", query)
+
+	// TODO: 구현
 
 	noteList := []restapi.NoteSimpleInfo{}
 	noteList = append(noteList, restapi.NoteSimpleInfo{

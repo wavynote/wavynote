@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/wavynote/internal/gateway/http/handler/restapi"
 	"github.com/wavynote/internal/platform/dbmsadapter/postgres"
 	"github.com/wavynote/internal/wavynote"
@@ -51,6 +52,7 @@ func (h *WriteHandler) SaveNote(c *gin.Context) {
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),
 		})
+		return
 	}
 
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
@@ -124,7 +126,7 @@ func (h *WriteHandler) SaveNote(c *gin.Context) {
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "내가 쓴 노트 저장",
+			Msg:    "",
 		},
 	)
 }
@@ -155,6 +157,7 @@ func (h *WriteHandler) UpdateNote(c *gin.Context) {
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),
 		})
+		return
 	}
 
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
@@ -197,14 +200,34 @@ func (h *WriteHandler) UpdateNote(c *gin.Context) {
 	for _, keyword := range reqInfo.Keywords {
 		keywordList = append(keywordList, fmt.Sprintf("'%s'", keyword))
 	}
-	fmt.Println(keywordList)
 
 	// 수정될 수 있는 항목
 	//  - 제목, 본문, 키워드
+	var targets []string
+	if reqInfo.Title != "" {
+		targets = append(targets, fmt.Sprintf("title = '%s'", reqInfo.Title))
+	}
+
+	if reqInfo.Content != "" {
+		targets = append(targets, fmt.Sprintf("contents = '%s'", reqInfo.Content))
+	}
+
+	if len(keywordList) != 0 {
+		targets = append(targets, fmt.Sprintf("keywords = ARRAY[%s]::uuid[]", strings.Join(keywordList, ", ")))
+	}
+
+	if len(targets) == 0 {
+		c.IndentedJSON(http.StatusBadRequest, restapi.Response400{
+			Code: http.StatusBadRequest,
+			Msg:  "there is no target to update",
+		})
+		return
+	}
+
 	query := fmt.Sprintf(`
-		UPDATE public.note SET title = '%s', contents = '%s', keywords = ARRAY[%s]::uuid[], save_at = '%s'
+		UPDATE public.note SET %s, save_at = '%s'
 		WHERE id = '%s' AND from_id = '%s'
-	`, reqInfo.Title, reqInfo.Content, strings.Join(keywordList, ","), time.Now().Format("2006-01-02 15:04:05"), reqInfo.NoteId, reqInfo.FromId)
+	`, strings.Join(targets, ","), time.Now().Format("2006-01-02 15:04:05"), reqInfo.NoteId, reqInfo.FromId)
 
 	_, err = db.ExecTx(tx, query)
 	if err != nil {
@@ -262,10 +285,37 @@ func (h *WriteHandler) SendNote(c *gin.Context) {
 			Code: http.StatusBadRequest,
 			Msg:  err.Error(),
 		})
+		return
 	}
 
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
 	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var tx *sql.Tx
+	defer func() {
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
 			Code: http.StatusInternalServerError,
@@ -279,7 +329,17 @@ func (h *WriteHandler) SendNote(c *gin.Context) {
 		WHERE id = '%s' AND from_id = '%s'
 	`, reqInfo.ConversationId, reqInfo.ToId, time.Now().Format("2006-01-02 15:04:05"), reqInfo.NoteId, reqInfo.FromId)
 
-	_, err = db.ExecuteQuery(query)
+	_, err = db.ExecTx(tx, query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
 			Code: http.StatusInternalServerError,
@@ -292,7 +352,7 @@ func (h *WriteHandler) SendNote(c *gin.Context) {
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "내가 쓴 노트를 특정 대상에게 보내기",
+			Msg:    "",
 		},
 	)
 }
@@ -315,13 +375,100 @@ func (h *WriteHandler) ShareToOpenNote(c *gin.Context) {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
 
+	var reqInfo *restapi.ShareNoteRequest
+
+	err = c.BindJSON(&reqInfo)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, restapi.Response400{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
 	// TODO: send_at 값 설정필요함
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var tx *sql.Tx
+	defer func() {
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// 대화방 생성
+	uuid := uuid.New().String()
+	query := fmt.Sprintf(`
+		INSERT INTO public.conversation(id, host_id, create_at)
+		VALUES('%s', '%s', '%s')
+	`, uuid, reqInfo.HostId, time.Now().Format("2006-01-02 15:04:05"))
+
+	_, err = db.ExecTx(tx, query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// 공유할 노트의 conversation_id 값 갱신
+	query = fmt.Sprintf(`
+		UPDATE public.note SET conversation_id = '%s'
+		WHERE id = '%s' AND from_id = '%s'
+	`, uuid, reqInfo.NoteId, reqInfo.HostId)
+
+	_, err = db.ExecTx(tx, query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
 
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "내가 쓴 노트를 오픈 노트에 공유하기",
+			Msg:    "",
 		},
 	)
 }
@@ -344,11 +491,14 @@ func (h *WriteHandler) SendNoteToRandomUser(c *gin.Context) {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
 
+	// TODO: 구현
+	//  - conversation 테이블의 guest_id 칼럼을 갱신해야함
+
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기",
+			Msg:    "[구현중] 내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기",
 		},
 	)
 }
@@ -410,6 +560,14 @@ func (h *WriteHandler) ShowNote(c *gin.Context) {
 		})
 		return
 	} else {
+		if len(rows) == 0 {
+			c.IndentedJSON(http.StatusNotFound, restapi.Response404{
+				Code: http.StatusNotFound,
+				Msg:  "there is no target note",
+			})
+			return
+		}
+
 		for i := 0; i < len(rows); i++ {
 			noteInfo = restapi.NoteInfo{
 				NoteId:         db.GetUUID(rows[i]["id"]),

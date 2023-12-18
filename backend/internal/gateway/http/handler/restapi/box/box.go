@@ -1,9 +1,11 @@
 package box
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wavynote/internal/gateway/http/handler/restapi"
@@ -61,9 +63,9 @@ func (h *BoxHandler) ShowConversation(c *gin.Context) {
 	}()
 
 	query := fmt.Sprintf(`
-		SELECT id, host_id, guest_id, create_at, delete_at
+		SELECT id, host_id, guest_id, create_at
 		FROM public.conversation
-		WHERE host_id = '%s' OR guest_id = '%s'
+		WHERE delete_at is NULL AND (host_id = '%s' OR guest_id = '%s')
 	`, userId, userId)
 
 	var conversationList []restapi.ConversationInfo
@@ -140,6 +142,14 @@ func (h *BoxHandler) ShowConversation(c *gin.Context) {
 		}
 	}
 
+	if len(conversationList) == 0 {
+		c.IndentedJSON(http.StatusNotFound, restapi.Response404{
+			Code: http.StatusNotFound,
+			Msg:  "there is no conversation room",
+		})
+		return
+	}
+
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.ConversationListResponse{
@@ -214,6 +224,14 @@ func (h *BoxHandler) ShowConversationNoteList(c *gin.Context) {
 		}
 	}
 
+	if len(conversationNoteList) == 0 {
+		c.IndentedJSON(http.StatusNotFound, restapi.Response404{
+			Code: http.StatusNotFound,
+			Msg:  "there is no note in target conversation room",
+		})
+		return
+	}
+
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.ConverstaionNoteListResponse{
@@ -229,6 +247,7 @@ func (h *BoxHandler) ShowConversationNoteList(c *gin.Context) {
 // @Security	 BasicAuth
 // @Param        cid  query     string  false  "conversation id"
 // @Param        nid  query     string  false  "note id"
+// @Param        uid  query     string  false  "user id"
 // @Success      200  {object}  restapi.NoteInfo "조회한 노트 정보"
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
@@ -247,6 +266,9 @@ func (h *BoxHandler) ShowConversationNote(c *gin.Context) {
 	noteId := c.Query("nid")
 	fmt.Println("note_id:", noteId)
 
+	userId := c.Query("uid")
+	fmt.Println("user_id:", userId)
+
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
 	err = db.Open()
 	if err != nil {
@@ -257,13 +279,33 @@ func (h *BoxHandler) ShowConversationNote(c *gin.Context) {
 		return
 	}
 
+	var tx *sql.Tx
 	defer func() {
-		err := db.Close()
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
 		if err != nil {
 			//
 		}
 	}()
 
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// 노트 정보 조회
 	query := fmt.Sprintf(`
 		SELECT id, folder_id, conversation_id, from_id, to_id, save_at, send_at, title, contents, keywords
 		FROM public.note
@@ -271,7 +313,7 @@ func (h *BoxHandler) ShowConversationNote(c *gin.Context) {
 	`, noteId, conversationId)
 
 	var noteInfo restapi.NoteInfo
-	rows, err := db.SelectQuery(query)
+	rows, err := db.QueryTx(tx, query)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
 			Code: http.StatusInternalServerError,
@@ -279,6 +321,14 @@ func (h *BoxHandler) ShowConversationNote(c *gin.Context) {
 		})
 		return
 	} else {
+		if len(rows) == 0 {
+			c.IndentedJSON(http.StatusNotFound, restapi.Response404{
+				Code: http.StatusNotFound,
+				Msg:  "there is no target note",
+			})
+			return
+		}
+
 		for i := 0; i < len(rows); i++ {
 			noteInfo = restapi.NoteInfo{
 				NoteId:         db.GetUUID(rows[i]["id"]),
@@ -293,6 +343,34 @@ func (h *BoxHandler) ShowConversationNote(c *gin.Context) {
 				Keywords:       db.GetArray(rows[i]["keywords"]),
 			}
 		}
+	}
+
+	// isread 값 갱신
+	//  - 상대방이 작성한 노트를 살펴보는 경우
+	if userId != noteInfo.FromId {
+		query = fmt.Sprintf(`
+		UPDATE public.note SET isread = true
+		WHERE id = '%s' AND conversation_id = '%s'
+	`, noteId, conversationId)
+
+		_, err = db.ExecTx(tx, query)
+		if err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+				Code: http.StatusInternalServerError,
+				Msg:  err.Error(),
+			})
+			return
+		}
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
 	}
 
 	c.IndentedJSON(
@@ -326,11 +404,90 @@ func (h *BoxHandler) DeleteConversation(c *gin.Context) {
 	conversationId := c.Query("cid")
 	fmt.Println("conversation_id:", conversationId)
 
+	// TODO: 대화방이 삭제되는 경우에 해당 대화방에 남아있는 노트 정보를 서버단에서 어떻게 처리할 것 인가?
+	//
+	// 1. conversation 테이블에서 conversation_id에 해당하는 row의 delete_at 칼럼을 현재 시간으로 업데이트
+	// 2. note 테이블의 conversation_id를 제거하고 folder_id를 d21c43a5-fa35-414f-92bb-b693b60aaee6로 업데이트
+	//  - 노트 정보를 일정 기간 유지하기 위해 backup 폴더로 변경
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var tx *sql.Tx
+	defer func() {
+		err := db.RollbackTx(tx)
+		if err != nil {
+			// 이미 Commit이 수행된 경우에는 아래와 같은 에러메시지 확인 가능함
+			//  - sql: transaction has already been committed or rolled back
+		} else {
+			// 롤백 성공
+		}
+
+		err = db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TRANSACTION BEGIN
+	tx, err = db.BeginTx()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	query := fmt.Sprintf(`
+		UPDATE public.conversation SET delete_at = '%s'
+		WHERE id = '%s'
+	`, time.Now().Format("2006-01-02 15:04:05"), conversationId)
+
+	_, err = db.ExecTx(tx, query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	query = fmt.Sprintf(`
+		UPDATE public.note SET conversation_id = NULL, folder_id = 'd21c43a5-fa35-414f-92bb-b693b60aaee6'
+		WHERE conversation_id = '%s'
+	`, conversationId)
+
+	_, err = db.ExecTx(tx, query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	// TRANSACTION COMMIT
+	err = db.CommitTx(tx)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
 	c.IndentedJSON(
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "특정 대화방 삭제",
+			Msg:    "",
 		},
 	)
 }

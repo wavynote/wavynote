@@ -92,6 +92,17 @@ definitions:
         example: 5
         type: integer
     type: object
+  restapi.LandingPageResonse:
+    properties:
+      folder_id:
+        description: 랜딩 페이지에서 보여줄 폴더의 고유 id 값
+        example: 283744fe-7074-4ffa-abc6-dae8cb786058
+        type: string
+      user_id:
+        description: 사용자 id
+        example: somebody@naver.com
+        type: string
+    type: object
   restapi.NoteFolderInfo:
     properties:
       note_id:
@@ -317,8 +328,41 @@ definitions:
         type: string
     type: object
   restapi.SignInRequest:
+    properties:
+      id:
+        description: 로그인시 입력한 ID
+        example: somebody@naver.com
+        type: string
+      password:
+        description: 로그인시 입력한 패스워드
+        example: 04F0BF9AB5963706415A0EC4C0E8167EBC8640B0B9A40870CDC39BE8A8DA813B
+        type: string
     type: object
   restapi.SignUpRequest:
+    properties:
+      emoji:
+        description: 회원 가입시 입력한 이모지
+        example: "\U0001F60E"
+        type: string
+      id:
+        description: 회원 가입시 입력한 ID
+        example: somebody@naver.com
+        type: string
+      keywords:
+        description: 회원 가입시 입력한 키워드
+        example:
+        - b0d88d67-01fd-47f8-b426-6ca0657d0f6e
+        items:
+          type: string
+        type: array
+      nickname:
+        description: 회원 가입시 입력한 닉네임
+        example: somebody
+        type: string
+      password:
+        description: 회원 가입시 입력한 패스워드
+        example: 04F0BF9AB5963706415A0EC4C0E8167EBC8640B0B9A40870CDC39BE8A8DA813B
+        type: string
     type: object
   restapi.UpdateNoteRequest:
     properties:
@@ -473,6 +517,10 @@ paths:
         in: query
         name: nid
         type: string
+      - description: user id
+        in: query
+        name: uid
+        type: string
       responses:
         "200":
           description: 조회한 노트 정보
@@ -503,7 +551,7 @@ paths:
     delete:
       description: 특정 폴더 삭제
       parameters:
-      - description: 삭제할 폴다 정보
+      - description: 삭제할 폴더 정보
         in: body
         name: body
         required: true
@@ -795,9 +843,9 @@ paths:
           $ref: '#/definitions/restapi.SignInRequest'
       responses:
         "200":
-          description: OK
+          description: 랜딩페이지 출력 시 필요한 정보
           schema:
-            $ref: '#/definitions/restapi.DefaultResponse'
+            $ref: '#/definitions/restapi.LandingPageResonse'
         "400":
           description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
           schema:
@@ -823,7 +871,7 @@ paths:
     post:
       description: 회원 가입 요청
       parameters:
-      - description: 회원 가입 요청
+      - description: 회원 가입 요청 정보
         in: body
         name: body
         required: true
@@ -831,9 +879,9 @@ paths:
           $ref: '#/definitions/restapi.SignUpRequest'
       responses:
         "200":
-          description: OK
+          description: 랜딩페이지 출력 시 필요한 정보
           schema:
-            $ref: '#/definitions/restapi.DefaultResponse'
+            $ref: '#/definitions/restapi.LandingPageResonse'
         "400":
           description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
           schema:
