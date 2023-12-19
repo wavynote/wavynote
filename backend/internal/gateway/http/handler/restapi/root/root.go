@@ -26,7 +26,7 @@ func NewRootHandler(dbInfo wavynote.DataBaseInfo) *RootHandler {
 // GetFolderList godoc
 // @Summary      존재하는 모든 폴더 목록 조회
 // @Description  존재하는 모든 폴더 목록 조회
-// @Tags         Main 페이지 - Folder
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        id   query     string  false  "user id"
 // @Success      200  {object}  restapi.FolderListResponse ""
@@ -118,7 +118,7 @@ func (h *RootHandler) GetFolderList(c *gin.Context) {
 // GetNoteList godoc
 // @Summary      특정 폴더에 존재하는 모든 노트 조회
 // @Description  특정 폴더에 존재하는 모든 노트 조회
-// @Tags         Main 페이지 - Note
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        uid  query     string  false  "user id"
 // @Param        fid  query     string  false  "folder id"
@@ -201,7 +201,7 @@ func (h *RootHandler) GetNoteList(c *gin.Context) {
 // ChangeNoteFolder godoc
 // @Summary      노트가 저장되는 폴더 변경
 // @Description  노트가 저장되는 폴더 변경
-// @Tags         Main 페이지 - Note
+// @Tags         나의노트 페이지
 // @Param        body body      restapi.ChangeNoteFolderRequest  true  "노트를 저장할 (변경할)폴더 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -301,7 +301,7 @@ func (h *RootHandler) ChangeNoteFolder(c *gin.Context) {
 // AddFolder godoc
 // @Summary      폴더 추가
 // @Description  폴더 추가
-// @Tags         Main 페이지 - Folder
+// @Tags         나의노트 페이지
 // @Param        body body      restapi.AddFolderRequest  true  "추가할 폴더 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -399,7 +399,7 @@ func (h *RootHandler) AddFolder(c *gin.Context) {
 // ChangeFolderName godoc
 // @Summary      특정 폴더 이름 변경
 // @Description  특정 폴더 이름 변경
-// @Tags         Main 페이지 - Folder
+// @Tags         나의노트 페이지
 // @Param        body body      restapi.ChangeFolderNameRequest  true  "변경하고자 하는 폴더 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -497,7 +497,7 @@ func (h *RootHandler) ChangeFolderName(c *gin.Context) {
 // RemoveFolder godoc
 // @Summary      특정 폴더 삭제
 // @Description  특정 폴더 삭제
-// @Tags         Main 페이지 - Folder
+// @Tags         나의노트 페이지
 // @Param        body body      restapi.RemoveFolderRequest  true  "삭제할 폴더 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -615,7 +615,7 @@ func (h *RootHandler) RemoveFolder(c *gin.Context) {
 // RemoveNote godoc
 // @Summary      내가 쓴 특정 노트 삭제
 // @Description  내가 쓴 특정 노트 삭제
-// @Tags         Main 페이지 - Note
+// @Tags         나의노트 페이지
 // @Param        body body      restapi.RemoveNoteRequest  true  "삭제할 노트 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.DefaultResponse ""

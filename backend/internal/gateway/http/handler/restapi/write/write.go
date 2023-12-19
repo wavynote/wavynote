@@ -29,7 +29,7 @@ func NewWriteHandler(dbInfo wavynote.DataBaseInfo) *WriteHandler {
 // SaveNote godoc
 // @Summary      내가 쓴 노트 저장
 // @Description  내가 쓴 노트 저장
-// @Tags         Write 페이지
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.SaveNoteRequest  true  "저장할 노트 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -134,7 +134,7 @@ func (h *WriteHandler) SaveNote(c *gin.Context) {
 // UpdateNote godoc
 // @Summary      내가 쓴 노트 갱신
 // @Description  내가 쓴 노트 갱신
-// @Tags         Write 페이지
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.UpdateNoteRequest  true  "갱신할 노트 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -262,7 +262,7 @@ func (h *WriteHandler) UpdateNote(c *gin.Context) {
 // SendNote godoc
 // @Summary      내가 쓴 노트를 특정 대상에게 보내기
 // @Description  내가 쓴 노트를 특정 대상에게 보내기
-// @Tags         Write 페이지
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.SendNoteRequest  true  "특정 대상에게 보낼 노트 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -360,7 +360,7 @@ func (h *WriteHandler) SendNote(c *gin.Context) {
 // ShareToOpenNote godoc
 // @Summary      내가 쓴 노트를 오픈 노트에 공유하기
 // @Description  내가 쓴 노트를 오픈 노트에 공유하기
-// @Tags         Write 페이지
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.ShareNoteRequest  true  "오픈 노트에 공유를 위한 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -386,7 +386,6 @@ func (h *WriteHandler) ShareToOpenNote(c *gin.Context) {
 		return
 	}
 
-	// TODO: send_at 값 설정필요함
 	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
 	err = db.Open()
 	if err != nil {
@@ -423,12 +422,14 @@ func (h *WriteHandler) ShareToOpenNote(c *gin.Context) {
 		return
 	}
 
+	currentTime := time.Now().Format("2006-01-02 15:04:05")
+
 	// 대화방 생성
 	uuid := uuid.New().String()
 	query := fmt.Sprintf(`
 		INSERT INTO public.conversation(id, host_id, create_at)
 		VALUES('%s', '%s', '%s')
-	`, uuid, reqInfo.HostId, time.Now().Format("2006-01-02 15:04:05"))
+	`, uuid, reqInfo.HostId, currentTime)
 
 	_, err = db.ExecTx(tx, query)
 	if err != nil {
@@ -439,11 +440,12 @@ func (h *WriteHandler) ShareToOpenNote(c *gin.Context) {
 		return
 	}
 
-	// 공유할 노트의 conversation_id 값 갱신
+	// 공유할 노트의 conversation_id 및 send_at 값 갱신
+	//  - 오픈노트에 공유하는 시점을 send_at에 기록함(to_id 칼럼 값이 비어있고 send_at에 값이 존재하는 경우는 오픈노트에 공유된 노트임)
 	query = fmt.Sprintf(`
-		UPDATE public.note SET conversation_id = '%s'
+		UPDATE public.note SET conversation_id = '%s', send_at = '%s'
 		WHERE id = '%s' AND from_id = '%s'
-	`, uuid, reqInfo.NoteId, reqInfo.HostId)
+	`, uuid, currentTime, reqInfo.NoteId, reqInfo.HostId)
 
 	_, err = db.ExecTx(tx, query)
 	if err != nil {
@@ -474,9 +476,9 @@ func (h *WriteHandler) ShareToOpenNote(c *gin.Context) {
 }
 
 // SendNoteToRandomUser godoc
-// @Summary      내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기
-// @Description  내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기
-// @Tags         Write 페이지
+// @Summary      내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
+// @Description  내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.RandomMatchRequest  true  "랜덤 매칭을 통해 보낼 노트 정보"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -506,7 +508,7 @@ func (h *WriteHandler) SendNoteToRandomUser(c *gin.Context) {
 // ShowNote godoc
 // @Summary      내가 쓴 노트 조회
 // @Description  내가 쓴 노트 조회
-// @Tags         Write 페이지
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        uid  query     string  false  "user id"
 // @Param        nid  query     string  false  "note id"

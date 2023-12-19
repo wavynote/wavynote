@@ -24,7 +24,7 @@ func NewSearchHandler(dbInfo wavynote.DataBaseInfo) *SearchHandler {
 // SearchNoteFromTop godoc
 // @Summary      전체 폴더를 대상으로 노트 내용 검색
 // @Description  전체 폴더를 대상으로 노트 내용 검색
-// @Tags         Main 페이지 - Search
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        id     query     string  false  "user id"
 // @Param        query  query     string  false  "query for search"
@@ -71,7 +71,7 @@ func (h *SearchHandler) SearchNoteFromTop(c *gin.Context) {
 // SearchNoteFromTargetFolder godoc
 // @Summary      전체 폴더를 대상으로 노트 내용 검색
 // @Description  전체 폴더를 대상으로 노트 내용 검색
-// @Tags         Main 페이지 - Search
+// @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        id  query     string  false  "target folder id"
 // @Param        query  query     string  false  "query for search"
@@ -112,4 +112,26 @@ func (h *SearchHandler) SearchNoteFromTargetFolder(c *gin.Context) {
 			Notes: noteList,
 		},
 	)
+}
+
+// SearchOpenNote godoc
+// @Summary      오픈노트 대상으로 노트 내용 검색
+// @Description  오픈노트 대상으로 노트 내용 검색
+// @Tags         오픈노트 페이지
+// @Security	 BasicAuth
+// @Param        query     query     string  false  "query for search"
+// @Success      200  {object}  restapi.OpenNoteListResponse ""
+// @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
+// @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
+// @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"
+// @Failure      500  {object}  restapi.Response500 "요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다"
+// @Router       /search/opennote [get]
+func (h *SearchHandler) SearchOpenNote(c *gin.Context) {
+	dmp, err := httputil.DumpRequest(c.Request, true)
+	if err == nil {
+		fmt.Printf("dump request:\n%s\n", string(dmp))
+	}
+
+	query := c.Query("query")
+	fmt.Println("query:", query)
 }

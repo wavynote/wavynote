@@ -182,6 +182,31 @@ definitions:
         example: my first note
         type: string
     type: object
+  restapi.OpenNoteListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/restapi.OpenNoteSimpleInfo'
+        type: array
+    type: object
+  restapi.OpenNoteSimpleInfo:
+    properties:
+      conversation_id:
+        example: 1afc571d-61bf-4cef-95ce-ab791f999297
+        type: string
+      note_id:
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+      post_at:
+        example: "2023-12-19 15:55:48"
+        type: string
+      preview:
+        example: This is the main text of my first wavy note.
+        type: string
+      title:
+        example: my first note
+        type: string
+    type: object
   restapi.RandomMatchRequest:
     properties:
       from_id:
@@ -436,7 +461,7 @@ paths:
       - BasicAuth: []
       summary: 특정 대화방 삭제
       tags:
-      - Box 페이지
+      - 받은노트 페이지
   /box/conversationlist:
     get:
       description: 노트를 주고 받는 대화방 목록 조회(최대 3개)
@@ -470,7 +495,7 @@ paths:
       - BasicAuth: []
       summary: 노트를 주고 받는 대화방 목록 조회(최대 3개)
       tags:
-      - Box 페이지
+      - 받은노트 페이지
   /box/notelist:
     get:
       description: 특정 친구와 주고받은 노트 목록
@@ -504,7 +529,7 @@ paths:
       - BasicAuth: []
       summary: 특정 친구와 주고받은 노트 목록
       tags:
-      - Box 페이지
+      - 받은노트 페이지
   /box/show:
     get:
       description: 특정 노트 조회
@@ -546,7 +571,7 @@ paths:
       - BasicAuth: []
       summary: 특정 노트 조회
       tags:
-      - Box 페이지
+      - 받은노트 페이지
   /main/folder:
     delete:
       description: 특정 폴더 삭제
@@ -582,7 +607,7 @@ paths:
       - BasicAuth: []
       summary: 특정 폴더 삭제
       tags:
-      - Main 페이지 - Folder
+      - 나의노트 페이지
     post:
       description: 폴더 추가
       parameters:
@@ -617,7 +642,7 @@ paths:
       - BasicAuth: []
       summary: 폴더 추가
       tags:
-      - Main 페이지 - Folder
+      - 나의노트 페이지
     put:
       description: 특정 폴더 이름 변경
       parameters:
@@ -652,7 +677,7 @@ paths:
       - BasicAuth: []
       summary: 특정 폴더 이름 변경
       tags:
-      - Main 페이지 - Folder
+      - 나의노트 페이지
   /main/folderlist:
     get:
       description: 존재하는 모든 폴더 목록 조회
@@ -686,7 +711,7 @@ paths:
       - BasicAuth: []
       summary: 존재하는 모든 폴더 목록 조회
       tags:
-      - Main 페이지 - Folder
+      - 나의노트 페이지
   /main/note:
     delete:
       description: 내가 쓴 특정 노트 삭제
@@ -722,7 +747,7 @@ paths:
       - BasicAuth: []
       summary: 내가 쓴 특정 노트 삭제
       tags:
-      - Main 페이지 - Note
+      - 나의노트 페이지
   /main/notefolder:
     put:
       description: 노트가 저장되는 폴더 변경
@@ -758,7 +783,7 @@ paths:
       - BasicAuth: []
       summary: 노트가 저장되는 폴더 변경
       tags:
-      - Main 페이지 - Note
+      - 나의노트 페이지
   /main/notelist:
     get:
       description: 특정 폴더에 존재하는 모든 노트 조회
@@ -796,7 +821,79 @@ paths:
       - BasicAuth: []
       summary: 특정 폴더에 존재하는 모든 노트 조회
       tags:
-      - Main 페이지 - Note
+      - 나의노트 페이지
+  /opennote/list:
+    get:
+      description: 사용자 키워드 기반으로 오픈노트에 공유된 노트 목록 조회
+      parameters:
+      - description: user id
+        in: query
+        name: uid
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.OpenNoteListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 사용자 키워드 기반으로 오픈노트에 공유된 노트 목록 조회
+      tags:
+      - 오픈노트 페이지
+  /opennote/show:
+    get:
+      description: 특정 오픈노트 조회
+      parameters:
+      - description: note id
+        in: query
+        name: nid
+        type: string
+      - description: conversation id
+        in: query
+        name: cid
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.NoteInfo'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 오픈노트 조회
+      tags:
+      - 오픈노트 페이지
   /profile/duplicate:
     get:
       description: 회원 가입 시 ID 중복 체크
@@ -830,7 +927,7 @@ paths:
       - BasicAuth: []
       summary: 회원 가입 시 ID 중복 체크
       tags:
-      - Profile 페이지
+      - SignUp/SignIn 페이지
   /profile/signin:
     post:
       description: 로그인 요청
@@ -866,7 +963,7 @@ paths:
       - BasicAuth: []
       summary: 로그인 요청
       tags:
-      - Profile 페이지
+      - SignUp/SignIn 페이지
   /profile/signup:
     post:
       description: 회원 가입 요청
@@ -902,7 +999,7 @@ paths:
       - BasicAuth: []
       summary: 회원 가입 요청
       tags:
-      - Profile 페이지
+      - SignUp/SignIn 페이지
   /search/folder:
     get:
       description: 전체 폴더를 대상으로 노트 내용 검색
@@ -940,7 +1037,41 @@ paths:
       - BasicAuth: []
       summary: 전체 폴더를 대상으로 노트 내용 검색
       tags:
-      - Main 페이지 - Search
+      - 나의노트 페이지
+  /search/opennote:
+    get:
+      description: 전체 폴더를 대상으로 노트 내용 검색
+      parameters:
+      - description: query for search
+        in: query
+        name: query
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.OpenNoteListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 전체 폴더를 대상으로 노트 내용 검색
+      tags:
+      - 오픈노트 페이지
   /search/top:
     get:
       description: 전체 폴더를 대상으로 노트 내용 검색
@@ -978,7 +1109,7 @@ paths:
       - BasicAuth: []
       summary: 전체 폴더를 대상으로 노트 내용 검색
       tags:
-      - Main 페이지 - Search
+      - 나의노트 페이지
   /write/opennote:
     post:
       description: 내가 쓴 노트를 오픈 노트에 공유하기
@@ -1014,10 +1145,10 @@ paths:
       - BasicAuth: []
       summary: 내가 쓴 노트를 오픈 노트에 공유하기
       tags:
-      - Write 페이지
+      - 나의노트 페이지
   /write/random:
     post:
-      description: 내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기
+      description: 내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
       parameters:
       - description: 랜덤 매칭을 통해 보낼 노트 정보
         in: body
@@ -1048,9 +1179,9 @@ paths:
             $ref: '#/definitions/restapi.Response500'
       security:
       - BasicAuth: []
-      summary: 내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기
+      summary: 내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
       tags:
-      - Write 페이지
+      - 나의노트 페이지
   /write/save:
     post:
       description: 내가 쓴 노트 저장
@@ -1086,7 +1217,7 @@ paths:
       - BasicAuth: []
       summary: 내가 쓴 노트 저장
       tags:
-      - Write 페이지
+      - 나의노트 페이지
     put:
       description: 내가 쓴 노트 갱신
       parameters:
@@ -1121,7 +1252,7 @@ paths:
       - BasicAuth: []
       summary: 내가 쓴 노트 갱신
       tags:
-      - Write 페이지
+      - 나의노트 페이지
   /write/send:
     post:
       description: 내가 쓴 노트를 특정 대상에게 보내기
@@ -1157,7 +1288,7 @@ paths:
       - BasicAuth: []
       summary: 내가 쓴 노트를 특정 대상에게 보내기
       tags:
-      - Write 페이지
+      - 나의노트 페이지
   /write/show:
     get:
       description: 내가 쓴 노트 조회
@@ -1195,7 +1326,7 @@ paths:
       - BasicAuth: []
       summary: 내가 쓴 노트 조회
       tags:
-      - Write 페이지
+      - 나의노트 페이지
 securityDefinitions:
   BasicAuth:
     type: basic

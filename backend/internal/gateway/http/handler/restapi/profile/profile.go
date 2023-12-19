@@ -29,7 +29,7 @@ func NewProfileHandler(dbInfo wavynote.DataBaseInfo) *ProfileHandler {
 // SignIn godoc
 // @Summary      로그인 요청
 // @Description  로그인 요청
-// @Tags         Profile 페이지
+// @Tags         SignUp/SignIn 페이지
 // @Param        body body      restapi.SignInRequest  true  "로그인 요청"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.LandingPageResonse "랜딩페이지 출력 시 필요한 정보"
@@ -150,7 +150,7 @@ func (h *ProfileHandler) SignIn(c *gin.Context) {
 // CheckDuplicateID godoc
 // @Summary      회원 가입 시 ID 중복 체크
 // @Description  회원 가입 시 ID 중복 체크
-// @Tags         Profile 페이지
+// @Tags         SignUp/SignIn 페이지
 // @Security	 BasicAuth
 // @Param        id   query     string  false  "user id"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -240,7 +240,7 @@ func (h *ProfileHandler) CheckDuplicateID(c *gin.Context) {
 // SignUp godoc
 // @Summary      회원 가입 요청
 // @Description  회원 가입 요청
-// @Tags         Profile 페이지
+// @Tags         SignUp/SignIn 페이지
 // @Param        body body      restapi.SignUpRequest  true  "회원 가입 요청 정보"
 // @Security	 BasicAuth
 // @Success      200  {object}  restapi.LandingPageResonse "랜딩페이지 출력 시 필요한 정보"

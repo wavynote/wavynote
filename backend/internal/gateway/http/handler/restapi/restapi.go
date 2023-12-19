@@ -17,11 +17,12 @@ const (
 	RESTAPI_VERSION  = "v1.0"
 	RESTAPI_BASEPATH = RESTAPI_NAME + "/" + RESTAPI_VERSION
 
-	RESTAPI_SERVICENAME_MAIN    = "/main"
-	RESTAPI_SERVICENAME_SEARCH  = "/search"
-	RESTAPI_SERVICENAME_WRITE   = "/write"
-	RESTAPI_SERVICENAME_BOX     = "/box"
-	RESTAPI_SERVICENAME_PROFILE = "/profile"
+	RESTAPI_SERVICENAME_MAIN     = "/main"
+	RESTAPI_SERVICENAME_SEARCH   = "/search"
+	RESTAPI_SERVICENAME_WRITE    = "/write"
+	RESTAPI_SERVICENAME_BOX      = "/box"
+	RESTAPI_SERVICENAME_PROFILE  = "/profile"
+	RESTAPI_SERVICENAME_OPENNOTE = "/opennote"
 
 	BASIC_AUTH_USER     = "wavynote"
 	BASIC_AUTH_PASSWORD = "wavy20230914"
@@ -32,8 +33,9 @@ const (
 	LOCATION_FOR_MAIN_FOLDER     = "/folder"
 	LOCATION_FOR_MAIN_NOTE       = "/note"
 
-	LOCATION_FOR_SEARCH_FROM_TOP    = "/top"
-	LOCATION_FOR_SEARCH_FROM_FOLDER = "/folder"
+	LOCATION_FOR_SEARCH_FROM_TOP      = "/top"
+	LOCATION_FOR_SEARCH_FROM_FOLDER   = "/folder"
+	LOCATION_FOR_SEARCH_FROM_OPENNOTE = "/opennote"
 
 	LOCATION_FOR_WRITE_SAVE     = "/save"
 	LOCATION_FOR_WRITE_SEND     = "/send"
@@ -49,6 +51,9 @@ const (
 	LOCATION_FOR_PROFILE_SIGNIN            = "/signin"
 	LOCATION_FOR_PROFILE_CHECKDULPLICATEID = "/duplicate"
 	LOCATION_FOR_PROFILE_SIGNUP            = "/signup"
+
+	LOCATION_FOR_OPENNOTE_LIST = "/list"
+	LOCATION_FOR_OPENNOTE_SHOW = "/show"
 )
 
 type Response400 struct {
@@ -235,6 +240,18 @@ type SignUpRequest struct {
 	NickName string   `json:"nickname" example:"somebody"`                                                         // 회원 가입시 입력한 닉네임
 	Keywords []string `json:"keywords" example:"b0d88d67-01fd-47f8-b426-6ca0657d0f6e"`                             // 회원 가입시 입력한 키워드
 	Emoji    string   `json:"emoji" example:"😎"`                                                                   // 회원 가입시 입력한 이모지
+}
+
+type OpenNoteSimpleInfo struct {
+	NoteId         string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`
+	ConversationId string `json:"conversation_id" example:"1afc571d-61bf-4cef-95ce-ab791f999297"`
+	Title          string `json:"title" example:"my first note"`
+	Preview        string `json:"preview" example:"This is the main text of my first wavy note."`
+	PostAt         string `json:"post_at" example:"2023-12-19 15:55:48"`
+}
+
+type OpenNoteListResponse struct {
+	Notes []OpenNoteSimpleInfo `json:"data"`
 }
 
 func BasicAuth(c *gin.Context) {

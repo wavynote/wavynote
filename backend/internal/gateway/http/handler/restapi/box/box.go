@@ -27,7 +27,7 @@ func NewBoxHandler(dbInfo wavynote.DataBaseInfo) *BoxHandler {
 // ShowConversation godoc
 // @Summary      노트를 주고 받는 대화방 목록 조회(최대 3개)
 // @Description  노트를 주고 받는 대화방 목록 조회(최대 3개)
-// @Tags         Box 페이지
+// @Tags         받은노트 페이지
 // @Security	 BasicAuth
 // @Param        id   query     string  false  "user id"
 // @Success      200  {object}  restapi.ConversationListResponse "조회된 대화방 목록 정보"
@@ -161,7 +161,7 @@ func (h *BoxHandler) ShowConversation(c *gin.Context) {
 // ShowConversationNoteList godoc
 // @Summary      특정 친구와 주고받은 노트 목록
 // @Description  특정 친구와 주고받은 노트 목록
-// @Tags         Box 페이지
+// @Tags         받은노트 페이지
 // @Security	 BasicAuth
 // @Param        id  query     string  false  "conversation id"
 // @Success      200  {object}  restapi.DefaultResponse ""
@@ -243,7 +243,7 @@ func (h *BoxHandler) ShowConversationNoteList(c *gin.Context) {
 // ShowConversationNote godoc
 // @Summary      특정 노트 조회
 // @Description  특정 노트 조회
-// @Tags         Box 페이지
+// @Tags         받은노트 페이지
 // @Security	 BasicAuth
 // @Param        cid  query     string  false  "conversation id"
 // @Param        nid  query     string  false  "note id"
@@ -382,7 +382,7 @@ func (h *BoxHandler) ShowConversationNote(c *gin.Context) {
 // DeleteConversation godoc
 // @Summary      특정 대화방 삭제
 // @Description  특정 대화방 삭제
-// @Tags         Box 페이지
+// @Tags         받은노트 페이지
 // @Security	 BasicAuth
 // @Param        uid  query     string  false  "user id"
 // @Param        cid  query     string  false  "conversation id"
