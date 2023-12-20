@@ -25,13 +25,20 @@ definitions:
     type: object
   restapi.ChangeNoteFolderRequest:
     properties:
-      data:
-        items:
-          $ref: '#/definitions/restapi.NoteFolderInfo'
-        type: array
       folder_id:
         description: 노트가 저장되는 폴더의 고유 id 값
         example: 980e71ba-0395-49aa-833e-3ebc76b3ec88
+        type: string
+      notes:
+        description: 폴더를 변경할 노트의 고유 id 값
+        example:
+        - 09d05df1-2958-4a3d-b910-3b4fb079327b
+        items:
+          type: string
+        type: array
+      user_id:
+        description: 사용자 id
+        example: wavynoteadmin@gmail.com
         type: string
     type: object
   restapi.ConversationInfo:
@@ -103,17 +110,6 @@ definitions:
         example: somebody@naver.com
         type: string
     type: object
-  restapi.NoteFolderInfo:
-    properties:
-      note_id:
-        description: 폴더를 변경할 노트의 고유 id 값
-        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
-        type: string
-      user_id:
-        description: 사용자 id
-        example: wavynoteadmin@gmail.com
-        type: string
-    type: object
   restapi.NoteInfo:
     properties:
       content:
@@ -122,7 +118,7 @@ definitions:
         type: string
       conversation_id:
         description: 대화방의 고유 id 값
-        example: ""
+        example: 1afc571d-61bf-4cef-95ce-ab791f999297
         type: string
       folder_id:
         description: 노트가 포함되어 있는 폴더의 고유 id 값
@@ -1002,7 +998,7 @@ paths:
       - SignUp/SignIn 페이지
   /search/folder:
     get:
-      description: 전체 폴더를 대상으로 노트 내용 검색
+      description: 특정 폴더를 대상으로 글 내용 검색
       parameters:
       - description: target folder id
         in: query
@@ -1035,12 +1031,12 @@ paths:
             $ref: '#/definitions/restapi.Response500'
       security:
       - BasicAuth: []
-      summary: 전체 폴더를 대상으로 노트 내용 검색
+      summary: 특정 폴더를 대상으로 글 내용 검색
       tags:
       - 나의노트 페이지
   /search/opennote:
     get:
-      description: 전체 폴더를 대상으로 노트 내용 검색
+      description: 오픈노트 대상으로 노트 내용 검색
       parameters:
       - description: query for search
         in: query
@@ -1069,7 +1065,7 @@ paths:
             $ref: '#/definitions/restapi.Response500'
       security:
       - BasicAuth: []
-      summary: 전체 폴더를 대상으로 노트 내용 검색
+      summary: 오픈노트 대상으로 노트 내용 검색
       tags:
       - 오픈노트 페이지
   /search/top:
@@ -1305,7 +1301,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/restapi.DefaultResponse'
+            $ref: '#/definitions/restapi.NoteInfo'
         "400":
           description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
           schema:

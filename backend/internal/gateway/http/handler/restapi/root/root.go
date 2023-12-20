@@ -263,11 +263,11 @@ func (h *RootHandler) ChangeNoteFolder(c *gin.Context) {
 		return
 	}
 
-	for _, noteInfo := range reqInfo.Notes {
+	for _, noteId := range reqInfo.Notes {
 		query := fmt.Sprintf(`
 			UPDATE public.note SET folder_id = '%s'
 			WHERE id = '%s' AND from_id = '%s'
-		`, reqInfo.FolderId, noteInfo.NoteId, noteInfo.UserId)
+		`, reqInfo.FolderId, noteId, reqInfo.UserId)
 
 		_, err = db.ExecTx(tx, query)
 		if err != nil {

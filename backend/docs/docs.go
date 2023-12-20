@@ -936,11 +936,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "전체 폴더를 대상으로 노트 내용 검색",
+                "description": "특정 폴더를 대상으로 글 내용 검색",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "전체 폴더를 대상으로 노트 내용 검색",
+                "summary": "특정 폴더를 대상으로 글 내용 검색",
                 "parameters": [
                     {
                         "type": "string",
@@ -996,11 +996,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "전체 폴더를 대상으로 노트 내용 검색",
+                "description": "오픈노트 대상으로 노트 내용 검색",
                 "tags": [
                     "오픈노트 페이지"
                 ],
-                "summary": "전체 폴더를 대상으로 노트 내용 검색",
+                "summary": "오픈노트 대상으로 노트 내용 검색",
                 "parameters": [
                     {
                         "type": "string",
@@ -1416,7 +1416,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/restapi.DefaultResponse"
+                            "$ref": "#/definitions/restapi.NoteInfo"
                         }
                     },
                     "400": {
@@ -1484,16 +1484,25 @@ const docTemplate = `{
         "restapi.ChangeNoteFolderRequest": {
             "type": "object",
             "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/restapi.NoteFolderInfo"
-                    }
-                },
                 "folder_id": {
                     "description": "노트가 저장되는 폴더의 고유 id 값",
                     "type": "string",
                     "example": "980e71ba-0395-49aa-833e-3ebc76b3ec88"
+                },
+                "notes": {
+                    "description": "폴더를 변경할 노트의 고유 id 값",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "09d05df1-2958-4a3d-b910-3b4fb079327b"
+                    ]
+                },
+                "user_id": {
+                    "description": "사용자 id",
+                    "type": "string",
+                    "example": "wavynoteadmin@gmail.com"
                 }
             }
         },
@@ -1593,21 +1602,6 @@ const docTemplate = `{
                 }
             }
         },
-        "restapi.NoteFolderInfo": {
-            "type": "object",
-            "properties": {
-                "note_id": {
-                    "description": "폴더를 변경할 노트의 고유 id 값",
-                    "type": "string",
-                    "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
-                },
-                "user_id": {
-                    "description": "사용자 id",
-                    "type": "string",
-                    "example": "wavynoteadmin@gmail.com"
-                }
-            }
-        },
         "restapi.NoteInfo": {
             "type": "object",
             "properties": {
@@ -1619,7 +1613,7 @@ const docTemplate = `{
                 "conversation_id": {
                     "description": "대화방의 고유 id 값",
                     "type": "string",
-                    "example": ""
+                    "example": "1afc571d-61bf-4cef-95ce-ab791f999297"
                 },
                 "folder_id": {
                     "description": "노트가 포함되어 있는 폴더의 고유 id 값",

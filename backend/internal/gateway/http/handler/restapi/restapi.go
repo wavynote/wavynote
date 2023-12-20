@@ -126,7 +126,7 @@ type ChangeFolderNameRequest struct {
 type NoteInfo struct {
 	NoteId         string   `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`         // 노트의 고유 id 값
 	FolderId       string   `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"`       // 노트가 포함되어 있는 폴더의 고유 id 값
-	ConversationId string   `json:"conversation_id" example:""`                                     // 대화방의 고유 id 값
+	ConversationId string   `json:"conversation_id" example:"1afc571d-61bf-4cef-95ce-ab791f999297"` // 대화방의 고유 id 값
 	FromId         string   `json:"from_id" example:"wavynoteadmin@gmail.com"`                      // 노트 작성자(또는 송신자)의 id
 	ToId           string   `json:"to_id" example:"somebody@naver.com"`                             // 노트 수신자의 id
 	SaveAt         string   `json:"save_at" example:"2023-11-01 21:00:00"`                          // 노트를 저장한 마지막 날짜 및 시간 정보
@@ -156,14 +156,10 @@ type RemoveNoteRequest struct {
 	RemoveNotes []RemoveNoteInfo `json:"data"`
 }
 
-type NoteFolderInfo struct {
-	UserId string `json:"user_id" example:"wavynoteadmin@gmail.com"`              // 사용자 id
-	NoteId string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"` // 폴더를 변경할 노트의 고유 id 값
-}
-
 type ChangeNoteFolderRequest struct {
-	FolderId string           `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"` // 노트가 저장되는 폴더의 고유 id 값
-	Notes    []NoteFolderInfo `json:"data"`
+	UserId   string   `json:"user_id" example:"wavynoteadmin@gmail.com"`                // 사용자 id
+	FolderId string   `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"` // 노트가 저장되는 폴더의 고유 id 값
+	Notes    []string `json:"notes" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`     // 폴더를 변경할 노트의 고유 id 값
 }
 
 type SaveNoteRequest struct {

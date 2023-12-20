@@ -69,8 +69,8 @@ func (h *SearchHandler) SearchNoteFromTop(c *gin.Context) {
 }
 
 // SearchNoteFromTargetFolder godoc
-// @Summary      전체 폴더를 대상으로 노트 내용 검색
-// @Description  전체 폴더를 대상으로 노트 내용 검색
+// @Summary      특정 폴더를 대상으로 글 내용 검색
+// @Description  특정 폴더를 대상으로 글 내용 검색
 // @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        id  query     string  false  "target folder id"
