@@ -154,9 +154,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "주고 받은 노트 목록",
                         "schema": {
-                            "$ref": "#/definitions/restapi.DefaultResponse"
+                            "$ref": "#/definitions/restapi.ConverstaionNoteListResponse"
                         }
                     },
                     "400": {
@@ -441,7 +441,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "폴더 목록 정보",
                         "schema": {
                             "$ref": "#/definitions/restapi.FolderListResponse"
                         }
@@ -480,11 +480,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "내가 쓴 특정 노트 삭제",
+                "description": "내가 작성한 특정 노트 삭제",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "내가 쓴 특정 노트 삭제",
+                "summary": "내가 작성한 특정 노트 삭제",
                 "parameters": [
                     {
                         "description": "삭제할 노트 정보",
@@ -615,7 +615,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "노트 목록 정보",
                         "schema": {
                             "$ref": "#/definitions/restapi.NoteListResponse"
                         }
@@ -669,7 +669,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "오픈노트에 공유된 노트 목록",
                         "schema": {
                             "$ref": "#/definitions/restapi.OpenNoteListResponse"
                         }
@@ -729,7 +729,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "조회한 오픈노트 정보",
                         "schema": {
                             "$ref": "#/definitions/restapi.NoteInfo"
                         }
@@ -936,11 +936,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "특정 폴더를 대상으로 글 내용 검색",
+                "description": "특정 폴더를 대상으로 노트 검색",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "특정 폴더를 대상으로 글 내용 검색",
+                "summary": "특정 폴더를 대상으로 노트 검색",
                 "parameters": [
                     {
                         "type": "string",
@@ -957,7 +957,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "검색어가 포함된 노트 정보",
                         "schema": {
                             "$ref": "#/definitions/restapi.NoteListResponse"
                         }
@@ -1011,7 +1011,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "검색어가 포함된 오픈노트 정보",
                         "schema": {
                             "$ref": "#/definitions/restapi.OpenNoteListResponse"
                         }
@@ -1071,7 +1071,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "검색어가 포함된 노트 정보",
                         "schema": {
                             "$ref": "#/definitions/restapi.NoteListResponse"
                         }
@@ -1110,11 +1110,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "내가 쓴 노트를 오픈 노트에 공유하기",
+                "description": "내가 작성한 노트를 오픈 노트에 공유하기",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "내가 쓴 노트를 오픈 노트에 공유하기",
+                "summary": "내가 작성한 노트를 오픈 노트에 공유하기",
                 "parameters": [
                     {
                         "description": "오픈 노트에 공유를 위한 정보",
@@ -1167,11 +1167,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기",
+                "description": "내가 작성한 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기",
+                "summary": "내가 작성한 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기",
                 "parameters": [
                     {
                         "description": "랜덤 매칭을 통해 보낼 노트 정보",
@@ -1224,11 +1224,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "내가 쓴 노트 갱신",
+                "description": "내가 작성한 노트 갱신",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "내가 쓴 노트 갱신",
+                "summary": "내가 작성한 노트 갱신",
                 "parameters": [
                     {
                         "description": "갱신할 노트 정보",
@@ -1279,11 +1279,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "내가 쓴 노트 저장",
+                "description": "내가 작성한 노트 저장",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "내가 쓴 노트 저장",
+                "summary": "내가 작성한 노트 저장",
                 "parameters": [
                     {
                         "description": "저장할 노트 정보",
@@ -1336,11 +1336,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "내가 쓴 노트를 특정 대상에게 보내기",
+                "description": "내가 작성한 노트를 특정 대상에게 보내기",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "내가 쓴 노트를 특정 대상에게 보내기",
+                "summary": "내가 작성한 노트를 특정 대상에게 보내기",
                 "parameters": [
                     {
                         "description": "특정 대상에게 보낼 노트 정보",
@@ -1393,11 +1393,11 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "내가 쓴 노트 조회",
+                "description": "내가 작성한 노트 조회",
                 "tags": [
                     "나의노트 페이지"
                 ],
-                "summary": "내가 쓴 노트 조회",
+                "summary": "내가 작성한 노트 조회",
                 "parameters": [
                     {
                         "type": "string",
@@ -1414,7 +1414,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "내가 작성한 노트 정보",
                         "schema": {
                             "$ref": "#/definitions/restapi.NoteInfo"
                         }
@@ -1452,10 +1452,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "folder_name": {
+                    "description": "추가할 폴더 이름",
                     "type": "string",
                     "example": "my wavywavy"
                 },
                 "user_id": {
+                    "description": "사용자 id",
                     "type": "string",
                     "example": "wavynoteadmin@gmail.com"
                 }
@@ -1538,6 +1540,52 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/restapi.ConversationInfo"
+                    }
+                }
+            }
+        },
+        "restapi.ConversationNoteInfo": {
+            "type": "object",
+            "properties": {
+                "from_id": {
+                    "description": "노트 송신자 id",
+                    "type": "string",
+                    "example": "wavynoteadmin@gmail.com"
+                },
+                "note_id": {
+                    "description": "노트의 고유 id 값",
+                    "type": "string",
+                    "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
+                },
+                "preview": {
+                    "description": "노트 본문 미리보기",
+                    "type": "string",
+                    "example": "This is the main text of my first wavy note."
+                },
+                "send_at": {
+                    "description": "노트 전송 시간",
+                    "type": "string",
+                    "example": "2023-10-29 21:00:48"
+                },
+                "title": {
+                    "description": "노트 제목",
+                    "type": "string",
+                    "example": "my first note"
+                },
+                "to_id": {
+                    "description": "노트 수신자 id",
+                    "type": "string",
+                    "example": "somebody@naver.com"
+                }
+            }
+        },
+        "restapi.ConverstaionNoteListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/restapi.ConversationNoteInfo"
                     }
                 }
             }
@@ -1708,22 +1756,27 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "conversation_id": {
+                    "description": "오픈 노트 공유를 통해 생성된 대화방 고유 id 값",
                     "type": "string",
                     "example": "1afc571d-61bf-4cef-95ce-ab791f999297"
                 },
                 "note_id": {
+                    "description": "오픈 노트에 공유한 노트의 고유 id 값",
                     "type": "string",
                     "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
                 },
                 "post_at": {
+                    "description": "오픈 노트에 공유한 시간",
                     "type": "string",
                     "example": "2023-12-19 15:55:48"
                 },
                 "preview": {
+                    "description": "오픈 노트에 공유한 노트의 본문 미리보기",
                     "type": "string",
                     "example": "This is the main text of my first wavy note."
                 },
                 "title": {
+                    "description": "오픈 노트에 공유한 노트의 제목",
                     "type": "string",
                     "example": "my first note"
                 }
@@ -1769,6 +1822,7 @@ const docTemplate = `{
                     }
                 },
                 "user_id": {
+                    "description": "사용자 id",
                     "type": "string",
                     "example": "wavynoteadmin@gmail.com"
                 }
@@ -1799,6 +1853,7 @@ const docTemplate = `{
                     }
                 },
                 "user_id": {
+                    "description": "사용자 id",
                     "type": "string",
                     "example": "wavynoteadmin@gmail.com"
                 }
@@ -1860,12 +1915,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "content": {
-                    "description": "내가 쓴 노트의 본문 내용",
+                    "description": "내가 작성한 노트의 본문 내용",
                     "type": "string",
                     "example": "This is the main text of my first wavy note."
                 },
                 "folder_id": {
-                    "description": "내가 쓴 노트가 포함되어 있는 폴더의 고유 id 값",
+                    "description": "내가 작성한 노트가 포함되어 있는 폴더의 고유 id 값",
                     "type": "string",
                     "example": "980e71ba-0395-49aa-833e-3ebc76b3ec88"
                 },
@@ -1875,7 +1930,7 @@ const docTemplate = `{
                     "example": "wavynoteadmin@gmail.com"
                 },
                 "keywords": {
-                    "description": "내가 쓴 노트의 키워드",
+                    "description": "내가 작성한 노트의 키워드",
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -1885,7 +1940,7 @@ const docTemplate = `{
                     ]
                 },
                 "title": {
-                    "description": "내가 쓴 노트의 제목",
+                    "description": "내가 작성한 노트의 제목",
                     "type": "string",
                     "example": "my first note"
                 }
@@ -1905,12 +1960,12 @@ const docTemplate = `{
                     "example": "wavynoteadmin@gmail.com"
                 },
                 "note_id": {
-                    "description": "내가 쓴 노트의 고유 id 값",
+                    "description": "내가 작성한 노트의 고유 id 값",
                     "type": "string",
                     "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
                 },
                 "to_id": {
-                    "description": "내가 쓴 노트를 보내는 대상의 id",
+                    "description": "내가 작성한 노트를 보내는 대상의 id",
                     "type": "string",
                     "example": "somebody@naver.com"
                 }
@@ -1985,12 +2040,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "content": {
-                    "description": "내가 쓴 노트의 본문 내용",
+                    "description": "내가 작성한 노트의 본문 내용",
                     "type": "string",
                     "example": "This is the main text of my first wavy note."
                 },
                 "folder_id": {
-                    "description": "내가 쓴 노트가 포함되어 있는 폴더의 고유 id 값",
+                    "description": "내가 작성한 노트가 포함되어 있는 폴더의 고유 id 값",
                     "type": "string",
                     "example": "980e71ba-0395-49aa-833e-3ebc76b3ec88"
                 },
@@ -2000,7 +2055,7 @@ const docTemplate = `{
                     "example": "wavynoteadmin@gmail.com"
                 },
                 "keywords": {
-                    "description": "내가 쓴 노트의 키워드",
+                    "description": "내가 작성한 노트의 키워드",
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -2010,12 +2065,12 @@ const docTemplate = `{
                     ]
                 },
                 "note_id": {
-                    "description": "내가 쓴 노트의 고유 id 값",
+                    "description": "내가 작성한 노트의 고유 id 값",
                     "type": "string",
                     "example": "09d05df1-2958-4a3d-b910-3b4fb079327b"
                 },
                 "title": {
-                    "description": "내가 쓴 노트의 제목",
+                    "description": "내가 작성한 노트의 제목",
                     "type": "string",
                     "example": "my first note"
                 }

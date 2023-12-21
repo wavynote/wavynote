@@ -164,7 +164,7 @@ func (h *BoxHandler) ShowConversation(c *gin.Context) {
 // @Tags         받은노트 페이지
 // @Security	 BasicAuth
 // @Param        id  query     string  false  "conversation id"
-// @Success      200  {object}  restapi.ConverstaionNoteListResponse ""
+// @Success      200  {object}  restapi.ConverstaionNoteListResponse "주고 받은 노트 목록"
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
 // @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"

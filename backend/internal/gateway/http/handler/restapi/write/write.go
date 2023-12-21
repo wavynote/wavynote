@@ -27,8 +27,8 @@ func NewWriteHandler(dbInfo wavynote.DataBaseInfo) *WriteHandler {
 }
 
 // SaveNote godoc
-// @Summary      내가 쓴 노트 저장
-// @Description  내가 쓴 노트 저장
+// @Summary      내가 작성한 노트 저장
+// @Description  내가 작성한 노트 저장
 // @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.SaveNoteRequest  true  "저장할 노트 정보"
@@ -132,8 +132,8 @@ func (h *WriteHandler) SaveNote(c *gin.Context) {
 }
 
 // UpdateNote godoc
-// @Summary      내가 쓴 노트 갱신
-// @Description  내가 쓴 노트 갱신
+// @Summary      내가 작성한 노트 갱신
+// @Description  내가 작성한 노트 갱신
 // @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.UpdateNoteRequest  true  "갱신할 노트 정보"
@@ -260,8 +260,8 @@ func (h *WriteHandler) UpdateNote(c *gin.Context) {
 }
 
 // SendNote godoc
-// @Summary      내가 쓴 노트를 특정 대상에게 보내기
-// @Description  내가 쓴 노트를 특정 대상에게 보내기
+// @Summary      내가 작성한 노트를 특정 대상에게 보내기
+// @Description  내가 작성한 노트를 특정 대상에게 보내기
 // @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.SendNoteRequest  true  "특정 대상에게 보낼 노트 정보"
@@ -358,8 +358,8 @@ func (h *WriteHandler) SendNote(c *gin.Context) {
 }
 
 // ShareToOpenNote godoc
-// @Summary      내가 쓴 노트를 오픈 노트에 공유하기
-// @Description  내가 쓴 노트를 오픈 노트에 공유하기
+// @Summary      내가 작성한 노트를 오픈 노트에 공유하기
+// @Description  내가 작성한 노트를 오픈 노트에 공유하기
 // @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.ShareNoteRequest  true  "오픈 노트에 공유를 위한 정보"
@@ -476,8 +476,8 @@ func (h *WriteHandler) ShareToOpenNote(c *gin.Context) {
 }
 
 // SendNoteToRandomUser godoc
-// @Summary      내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
-// @Description  내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
+// @Summary      내가 작성한 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
+// @Description  내가 작성한 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
 // @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        body body      restapi.RandomMatchRequest  true  "랜덤 매칭을 통해 보낼 노트 정보"
@@ -500,19 +500,19 @@ func (h *WriteHandler) SendNoteToRandomUser(c *gin.Context) {
 		http.StatusOK,
 		restapi.DefaultResponse{
 			Result: "true",
-			Msg:    "[구현중] 내가 쓴 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기",
+			Msg:    "[구현중] 내가 작성한 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상의 노트로 보내기",
 		},
 	)
 }
 
 // ShowNote godoc
-// @Summary      내가 쓴 노트 조회
-// @Description  내가 쓴 노트 조회
+// @Summary      내가 작성한 노트 조회
+// @Description  내가 작성한 노트 조회
 // @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        uid  query     string  false  "user id"
 // @Param        nid  query     string  false  "note id"
-// @Success      200  {object}  restapi.NoteInfo ""
+// @Success      200  {object}  restapi.NoteInfo "내가 작성한 노트 정보"
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
 // @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"

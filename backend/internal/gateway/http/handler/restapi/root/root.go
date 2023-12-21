@@ -29,7 +29,7 @@ func NewRootHandler(dbInfo wavynote.DataBaseInfo) *RootHandler {
 // @Tags         나의노트 페이지
 // @Security	 BasicAuth
 // @Param        id   query     string  false  "user id"
-// @Success      200  {object}  restapi.FolderListResponse ""
+// @Success      200  {object}  restapi.FolderListResponse "폴더 목록 정보"
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
 // @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"
@@ -122,7 +122,7 @@ func (h *RootHandler) GetFolderList(c *gin.Context) {
 // @Security	 BasicAuth
 // @Param        uid  query     string  false  "user id"
 // @Param        fid  query     string  false  "folder id"
-// @Success      200  {object}  restapi.NoteListResponse ""
+// @Success      200  {object}  restapi.NoteListResponse "노트 목록 정보"
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
 // @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"
@@ -613,8 +613,8 @@ func (h *RootHandler) RemoveFolder(c *gin.Context) {
 }
 
 // RemoveNote godoc
-// @Summary      내가 쓴 특정 노트 삭제
-// @Description  내가 쓴 특정 노트 삭제
+// @Summary      내가 작성한 특정 노트 삭제
+// @Description  내가 작성한 특정 노트 삭제
 // @Tags         나의노트 페이지
 // @Param        body body      restapi.RemoveNoteRequest  true  "삭제할 노트 정보"
 // @Security	 BasicAuth

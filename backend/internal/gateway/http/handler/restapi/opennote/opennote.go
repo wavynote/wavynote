@@ -29,7 +29,7 @@ func NewOpenNotehHandler(dbInfo wavynote.DataBaseInfo) *OpenNoteHandler {
 // @Tags         오픈노트 페이지
 // @Security	 BasicAuth
 // @Param        uid     query     string  false  "user id"
-// @Success      200  {object}  restapi.OpenNoteListResponse ""
+// @Success      200  {object}  restapi.OpenNoteListResponse "오픈노트에 공유된 노트 목록"
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
 // @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"
@@ -149,7 +149,7 @@ func (h *OpenNoteHandler) GetOpenNoteList(c *gin.Context) {
 // @Security	 BasicAuth
 // @Param        nid     query     string  false  "note id"
 // @Param        cid     query     string  false  "conversation id"
-// @Success      200  {object}  restapi.NoteInfo ""
+// @Success      200  {object}  restapi.NoteInfo "조회한 오픈노트 정보"
 // @Failure      400  {object}  restapi.Response400 "요청에 포함된 파라미터 값이 잘못된 경우입니다"
 // @Failure		 401  {object}  restapi.Response401 "인증에 실패한 경우이며, 실패 사유가 전달됩니다"
 // @Failure      404  {object}  restapi.Response404 "요청한 리소스가 서버에 존재하지 않는 경우입니다"

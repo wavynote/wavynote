@@ -108,13 +108,13 @@ type RemoveFolderInfo struct {
 }
 
 type RemoveFolderRequest struct {
-	UserId        string             `json:"user_id" example:"wavynoteadmin@gmail.com"`
+	UserId        string             `json:"user_id" example:"wavynoteadmin@gmail.com"` // 사용자 id
 	RemoveFolders []RemoveFolderInfo `json:"data"`
 }
 
 type AddFolderRequest struct {
-	UserId     string `json:"user_id" example:"wavynoteadmin@gmail.com"`
-	FolderName string `json:"folder_name" example:"my wavywavy"`
+	UserId     string `json:"user_id" example:"wavynoteadmin@gmail.com"` // 사용자 id
+	FolderName string `json:"folder_name" example:"my wavywavy"`         // 추가할 폴더 이름
 }
 
 type ChangeFolderNameRequest struct {
@@ -152,7 +152,7 @@ type RemoveNoteInfo struct {
 }
 
 type RemoveNoteRequest struct {
-	UserId      string           `json:"user_id" example:"wavynoteadmin@gmail.com"`
+	UserId      string           `json:"user_id" example:"wavynoteadmin@gmail.com"` // 사용자 id
 	RemoveNotes []RemoveNoteInfo `json:"data"`
 }
 
@@ -163,26 +163,26 @@ type ChangeNoteFolderRequest struct {
 }
 
 type SaveNoteRequest struct {
-	FolderId string   `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"`       // 내가 쓴 노트가 포함되어 있는 폴더의 고유 id 값
+	FolderId string   `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"`       // 내가 작성한 노트가 포함되어 있는 폴더의 고유 id 값
 	FromId   string   `json:"from_id" example:"wavynoteadmin@gmail.com"`                      // 작성자의 id
-	Title    string   `json:"title" example:"my first note"`                                  // 내가 쓴 노트의 제목
-	Content  string   `json:"content" example:"This is the main text of my first wavy note."` // 내가 쓴 노트의 본문 내용
-	Keywords []string `json:"keywords" example:"b0d88d67-01fd-47f8-b426-6ca0657d0f6e"`        // 내가 쓴 노트의 키워드
+	Title    string   `json:"title" example:"my first note"`                                  // 내가 작성한 노트의 제목
+	Content  string   `json:"content" example:"This is the main text of my first wavy note."` // 내가 작성한 노트의 본문 내용
+	Keywords []string `json:"keywords" example:"b0d88d67-01fd-47f8-b426-6ca0657d0f6e"`        // 내가 작성한 노트의 키워드
 }
 
 type UpdateNoteRequest struct {
-	NoteId   string   `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`         // 내가 쓴 노트의 고유 id 값
-	FolderId string   `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"`       // 내가 쓴 노트가 포함되어 있는 폴더의 고유 id 값
+	NoteId   string   `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`         // 내가 작성한 노트의 고유 id 값
+	FolderId string   `json:"folder_id" example:"980e71ba-0395-49aa-833e-3ebc76b3ec88"`       // 내가 작성한 노트가 포함되어 있는 폴더의 고유 id 값
 	FromId   string   `json:"from_id" example:"wavynoteadmin@gmail.com"`                      // 작성자의 id
-	Title    string   `json:"title" example:"my first note"`                                  // 내가 쓴 노트의 제목
-	Content  string   `json:"content" example:"This is the main text of my first wavy note."` // 내가 쓴 노트의 본문 내용
-	Keywords []string `json:"keywords" example:"b0d88d67-01fd-47f8-b426-6ca0657d0f6e"`        // 내가 쓴 노트의 키워드
+	Title    string   `json:"title" example:"my first note"`                                  // 내가 작성한 노트의 제목
+	Content  string   `json:"content" example:"This is the main text of my first wavy note."` // 내가 작성한 노트의 본문 내용
+	Keywords []string `json:"keywords" example:"b0d88d67-01fd-47f8-b426-6ca0657d0f6e"`        // 내가 작성한 노트의 키워드
 }
 
 type SendNoteRequest struct {
-	NoteId         string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`         // 내가 쓴 노트의 고유 id 값
+	NoteId         string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`         // 내가 작성한 노트의 고유 id 값
 	FromId         string `json:"from_id" example:"wavynoteadmin@gmail.com"`                      // 작성자의 id
-	ToId           string `json:"to_id" example:"somebody@naver.com"`                             // 내가 쓴 노트를 보내는 대상의 id
+	ToId           string `json:"to_id" example:"somebody@naver.com"`                             // 내가 작성한 노트를 보내는 대상의 id
 	ConversationId string `json:"conversation_id" example:"1afc571d-61bf-4cef-95ce-ab791f999297"` // 대화방의 고유 id 값
 }
 
@@ -208,12 +208,12 @@ type ConversationListResponse struct {
 }
 
 type ConversationNoteInfo struct {
-	NoteId  string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`
-	FromId  string `json:"from_id" example:"wavynoteadmin@gmail.com"`
-	ToId    string `json:"to_id" example:"somebody@naver.com"`
-	Title   string `json:"title" example:"my first note"`
-	Preview string `json:"preview" example:"This is the main text of my first wavy note."`
-	SendAt  string `json:"send_at" example:"2023-10-29 21:00:48"`
+	NoteId  string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`         // 노트의 고유 id 값
+	FromId  string `json:"from_id" example:"wavynoteadmin@gmail.com"`                      // 노트 송신자 id
+	ToId    string `json:"to_id" example:"somebody@naver.com"`                             // 노트 수신자 id
+	Title   string `json:"title" example:"my first note"`                                  // 노트 제목
+	Preview string `json:"preview" example:"This is the main text of my first wavy note."` // 노트 본문 미리보기
+	SendAt  string `json:"send_at" example:"2023-10-29 21:00:48"`                          // 노트 전송 시간
 }
 
 type ConverstaionNoteListResponse struct {
@@ -239,11 +239,11 @@ type SignUpRequest struct {
 }
 
 type OpenNoteSimpleInfo struct {
-	NoteId         string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`
-	ConversationId string `json:"conversation_id" example:"1afc571d-61bf-4cef-95ce-ab791f999297"`
-	Title          string `json:"title" example:"my first note"`
-	Preview        string `json:"preview" example:"This is the main text of my first wavy note."`
-	PostAt         string `json:"post_at" example:"2023-12-19 15:55:48"`
+	NoteId         string `json:"note_id" example:"09d05df1-2958-4a3d-b910-3b4fb079327b"`         // 오픈 노트에 공유한 노트의 고유 id 값
+	ConversationId string `json:"conversation_id" example:"1afc571d-61bf-4cef-95ce-ab791f999297"` // 오픈 노트 공유를 통해 생성된 대화방 고유 id 값
+	Title          string `json:"title" example:"my first note"`                                  // 오픈 노트에 공유한 노트의 제목
+	Preview        string `json:"preview" example:"This is the main text of my first wavy note."` // 오픈 노트에 공유한 노트의 본문 미리보기
+	PostAt         string `json:"post_at" example:"2023-12-19 15:55:48"`                          // 오픈 노트에 공유한 시간
 }
 
 type OpenNoteListResponse struct {
