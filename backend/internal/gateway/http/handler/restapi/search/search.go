@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/wavynote/internal/gateway/http/handler/restapi"
+	"github.com/wavynote/internal/platform/dbmsadapter/postgres"
 	"github.com/wavynote/internal/wavynote"
 )
 
@@ -43,22 +44,59 @@ func (h *SearchHandler) SearchNoteFromTop(c *gin.Context) {
 	userId := c.Query("id")
 	fmt.Println("userId:", userId)
 
-	query := c.Query("query")
-	fmt.Println("query:", query)
+	queryInfo := c.Query("query")
+	fmt.Println("query:", queryInfo)
 
-	// TODO: 구현
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// 내가 작성한 모든 노트를 대상으로 검색
+	query := fmt.Sprintf(`
+		SELECT id, title, contents
+		FROM public.note
+		WHERE from_id = '%s'
+		AND contents @@ to_tsquery('%s:*')
+	`, userId, queryInfo)
 
 	noteList := []restapi.NoteSimpleInfo{}
-	noteList = append(noteList, restapi.NoteSimpleInfo{
-		NoteId:  "a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b",
-		Title:   "나의첫번째노트",
-		Preview: "나의 첫 웨이비노트 본문 내용입니다.",
-	})
-	noteList = append(noteList, restapi.NoteSimpleInfo{
-		NoteId:  "1a092b35-dc9e-472e-be39-7391ca176040",
-		Title:   "나의두번째노트",
-		Preview: "나의 두번째 웨이비노트 본문 내용입니다.",
-	})
+	rows, err := db.SelectQuery(query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	} else {
+		for i := 0; i < len(rows); i++ {
+			noteList = append(noteList, restapi.NoteSimpleInfo{
+				NoteId:  db.GetUUID(rows[i]["id"]),
+				Title:   db.GetString(rows[i]["title"]),
+				Preview: db.GetString(rows[i]["contents"])[0:20], // preview는 본문의 시작부터 최대 20자까지 제공
+			})
+		}
+	}
+
+	if len(noteList) == 0 {
+		c.IndentedJSON(http.StatusNotFound, restapi.Response404{
+			Code: http.StatusNotFound,
+			Msg:  "there is no result",
+		})
+		return
+	}
 
 	c.IndentedJSON(
 		http.StatusOK,
@@ -88,23 +126,60 @@ func (h *SearchHandler) SearchNoteFromTargetFolder(c *gin.Context) {
 	}
 
 	folderId := c.Query("id")
-	query := c.Query("query")
 	fmt.Println("folder_id:", folderId)
-	fmt.Println("query:", query)
+	queryInfo := c.Query("query")
+	fmt.Println("query:", queryInfo)
 
-	// TODO: 구현
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// 특정 폴더 내에 존재하는 노트를 대상으로 검색
+	query := fmt.Sprintf(`
+		SELECT id, title, contents
+		FROM public.note
+		WHERE folder_id = '%s'
+		AND contents @@ to_tsquery('%s:*')
+	`, folderId, queryInfo)
 
 	noteList := []restapi.NoteSimpleInfo{}
-	noteList = append(noteList, restapi.NoteSimpleInfo{
-		NoteId:  "a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b",
-		Title:   "나의첫번째노트",
-		Preview: "나의 첫 웨이비노트 본문 내용입니다.",
-	})
-	noteList = append(noteList, restapi.NoteSimpleInfo{
-		NoteId:  "1a092b35-dc9e-472e-be39-7391ca176040",
-		Title:   "나의두번째노트",
-		Preview: "나의 두번째 웨이비노트 본문 내용입니다.",
-	})
+	rows, err := db.SelectQuery(query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	} else {
+		for i := 0; i < len(rows); i++ {
+			noteList = append(noteList, restapi.NoteSimpleInfo{
+				NoteId:  db.GetUUID(rows[i]["id"]),
+				Title:   db.GetString(rows[i]["title"]),
+				Preview: db.GetString(rows[i]["contents"])[0:20], // preview는 본문의 시작부터 최대 20자까지 제공
+			})
+		}
+	}
+
+	if len(noteList) == 0 {
+		c.IndentedJSON(http.StatusNotFound, restapi.Response404{
+			Code: http.StatusNotFound,
+			Msg:  "there is no result",
+		})
+		return
+	}
 
 	c.IndentedJSON(
 		http.StatusOK,
