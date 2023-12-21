@@ -207,6 +207,69 @@ func (h *SearchHandler) SearchOpenNote(c *gin.Context) {
 		fmt.Printf("dump request:\n%s\n", string(dmp))
 	}
 
-	query := c.Query("query")
-	fmt.Println("query:", query)
+	queryInfo := c.Query("query")
+	fmt.Println("query:", queryInfo)
+
+	db := postgres.NewService(h.dbInfo.Host, h.dbInfo.Port, h.dbInfo.Login, h.dbInfo.Password, h.dbInfo.Database, h.dbInfo.SSLMode, h.dbInfo.AppName)
+	err = db.Open()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			//
+		}
+	}()
+
+	// TODO: 해당 키워드가 포함된 오픈노트 내에서의 검색인가?
+	//  - 그렇다면 인자로 선택된 키워드 정보를 받아야함
+	//  - 아니라면 전체 오픈노트를 대상으로 검색을 수행하면됨(오픈노트의 조건은 note테이블의 to_id 값은 비어있고 conversation_id와 send_at 값은 존재하는 노트들이다.)
+	query := fmt.Sprintf(`
+		SELECT id, conversation_id, title, contents, send_at
+		FROM public.note
+		WHERE to_id is NULL
+		AND send_at is not NULL
+		AND contents @@ to_tsquery('%s:*')
+	`, queryInfo)
+
+	opennoteList := []restapi.OpenNoteSimpleInfo{}
+	rows, err := db.SelectQuery(query)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, restapi.Response500{
+			Code: http.StatusInternalServerError,
+			Msg:  err.Error(),
+		})
+		return
+	} else {
+		for i := 0; i < len(rows); i++ {
+			opennoteList = append(opennoteList, restapi.OpenNoteSimpleInfo{
+				NoteId:         db.GetUUID(rows[i]["id"]),
+				ConversationId: db.GetUUID(rows[i]["conversation_id"]),
+				Title:          db.GetString(rows[i]["title"]),
+				Preview:        db.GetString(rows[i]["contents"])[0:20], // preview는 본문의 시작부터 최대 20자까지 제공
+				PostAt:         db.GetString(rows[i]["send_at"]),
+			})
+		}
+	}
+
+	if len(opennoteList) == 0 {
+		c.IndentedJSON(http.StatusNotFound, restapi.Response404{
+			Code: http.StatusNotFound,
+			Msg:  "there is no result",
+		})
+		return
+	}
+
+	c.IndentedJSON(
+		http.StatusOK,
+		restapi.OpenNoteListResponse{
+			Notes: opennoteList,
+		},
+	)
 }
