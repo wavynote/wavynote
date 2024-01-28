@@ -35,9 +35,6 @@ export default function HomePage() {
               <FolderBtn name="나의 폴더" type="light"></FolderBtn>
             </li>
             <li className="folderMin">
-              <FolderBtn name="좋아요" type="light"></FolderBtn>
-            </li>
-            <li className="folderMin">
               <FolderBtn name="보낸노트" type="light"></FolderBtn>
             </li>
           </ul>    
