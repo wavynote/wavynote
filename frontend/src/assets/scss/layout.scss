@@ -29,6 +29,14 @@
         &.noteListWrap{
           padding: 0;
         }
+
+        /* start of background color and scroll */
+        &.bgScroll{
+          overflow: hidden;
+          overflow-y: auto;
+          padding-bottom: 20px;
+        }
+        /* end of background color and scroll */
       }
     }
 
@@ -258,7 +266,15 @@
     }
   }
 
-  
+  &:has(.noList){
+    align-items: center;
+    justify-content: center;
+
+    .noList{
+      text-align: center;
+      font-size: 2.4rem;
+    }
+  }  
 
   
 }
@@ -299,3 +315,51 @@
 /* end of btnWrap */
 
 /* end of default layout repeat */
+
+/* start of folder */
+.folderWrap{
+  display: flex;
+  gap: 20px 20px;
+  flex-wrap: wrap;
+
+  .folderMin{
+    flex-basis: calc((100% - 20px)/2);
+  }
+
+  .dark{
+    width: 100%;
+    height: 155px;
+    border-radius: 15px;
+    color: white;
+    background-color: #040113;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+
+    p{
+      display: none;
+    }
+  }
+
+  .light{
+    width: 100%;
+    height: 155px;
+    border-radius: 15px;
+    padding: 25px;
+    background-color: #ffffff;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 1.8rem;
+
+    p{
+      font-size: 1.2rem;
+    }
+  }
+}
+/* end of folder */
+
+
