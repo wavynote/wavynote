@@ -1,4 +1,4 @@
-type ButtonType = "prev" | "search";
+type ButtonType = "prev" | "search" | "searchBlack" | "etc";
 
 interface ButtonProps {
   name: string;
@@ -11,6 +11,10 @@ function getTheme(type: ButtonType) {
       return "prevBtn";
     case "search":
       return "searchBtn";
+    case "searchBlack":
+      return "searchBlackBtn";
+    case "etc":
+      return "etcBtn"
   }
 }
 

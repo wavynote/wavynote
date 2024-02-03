@@ -70,4 +70,19 @@ button {
     width: 12px;
     height: 14px;
   }
+
+  &.searchBlackBtn{
+    width: 50px;
+    height: 50px;
+    border-radius: 20px;
+    background-image: url("./../images/icons/ic_search_white.svg");
+    background-color: #040113;
+    background-size: 20px 20px;
+  }
+
+  &.etcBtn{
+    width: 16px;
+    height: 16px;
+    background-image: url("./../images/icons/ic_ellipsis.svg");
+  }
 }

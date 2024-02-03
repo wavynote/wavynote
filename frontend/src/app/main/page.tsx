@@ -19,9 +19,13 @@ export default function HomePage() {
               <h2>나의노트</h2>
             </div>
             <div className="headerBtnWrap">
+              { /*
+              <TextBtn name="폴더이동" type="light"></TextBtn>
+              <TextBtn name="삭제" type="dark"></TextBtn>
+              */}
               <TextBtn name="노트선택" type="light"></TextBtn>
               <IconBtn name="" type="search"></IconBtn>
-            </div>
+            </div>            
           </header>
         </section>
         <section>
@@ -31,17 +35,10 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        <section className="noteListWrap">	
-          {/* <div className="noteListBtnWrap">
-            <div className="noteListBtnMin">
-              <TextBtn name="폴더이동" type="light"></TextBtn>
-              <TextBtn name="삭제" type="dark"></TextBtn>
-            </div>
-          </div> */}
+        <section className="noteListWrap">
           <div className="noteListMin">
             <ul className="noteList">
               <li className="list">
-
                 <Link href="/" className="noteCont">
                     <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
                     <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
@@ -79,17 +76,40 @@ export default function HomePage() {
                       <span className="tagDate">2023.01.01</span>
                     </div>
                 </Link>							
-                </li>
+              </li>
+              <li className="list">
+
+                <Link href="/" className="noteCont">
+                    <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
+                    <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
+                    <div className="tagArea">
+                      <span className="tagDate">2023.01.01</span>
+                    </div>
+                </Link>							
+              </li>
+              <li className="list">
+
+                <Link href="/" className="noteCont">
+                    <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
+                    <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
+                    <div className="tagArea">
+                      <span className="tagDate">2023.01.01</span>
+                    </div>
+                </Link>							
+              </li>
+              
             </ul>
           </div>
         </section>
         {/* <div className="noteListWrap">
-          <p className="noList">
-            새로운 노트를
-            <br />
-            써보세요
-          </p>
-        </div> */}
+          <div className="noteListMin">
+            <p className="noList">
+              새로운 노트를
+              <br />
+              써보세요
+            </p>
+          </div>          
+        </div>*/}
       </div>
     </div>
   );

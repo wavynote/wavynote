@@ -8,7 +8,7 @@ import "@/assets/scss/style.scss";
 
 import Link from "next/link";
 
-export default function folderList() {
+export default function folderEdit() {
   return (
     <div className="contentMin">
       <div className="">
@@ -18,7 +18,7 @@ export default function folderList() {
               <h2>폴더</h2>
             </div>
             <div className="headerBtnWrap">
-              <TextBtn name="편집" type="light"></TextBtn>
+              <TextBtn name="완료" type="dark"></TextBtn>
               <IconBtn name="" type="search"></IconBtn>
             </div>
           </header>
@@ -26,16 +26,16 @@ export default function folderList() {
         <section className="bgScroll">
           <ul className="folderWrap">
             <li className="folderMin">
-              <FolderBtn name="폴더추가" type="dark"></FolderBtn>
+              <FolderBtn name="폴더추가" type="disable"></FolderBtn>
             </li>
             <li className="folderMin">
-              <FolderBtn name="기본 폴더" type="light"></FolderBtn>
+              <FolderBtn name="기본 폴더" type="focused"></FolderBtn>
             </li>
             <li className="folderMin">
-              <FolderBtn name="나의 폴더" type="light"></FolderBtn>
+              <FolderBtn name="나의 폴더" type="editable"></FolderBtn>
             </li>
             <li className="folderMin">
-              <FolderBtn name="보낸노트" type="light"></FolderBtn>
+              <FolderBtn name="보낸노트" type="editable"></FolderBtn>
             </li>
           </ul>    
         </section>
