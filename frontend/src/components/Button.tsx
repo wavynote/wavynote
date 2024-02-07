@@ -1,4 +1,4 @@
-type ButtonTheme = 'light' | 'dark';
+type ButtonTheme = "light" | "dark";
 
 interface ButtonProps {
   name: string;
@@ -7,14 +7,14 @@ interface ButtonProps {
 
 function getTheme(theme: ButtonTheme) {
   switch (theme) {
-    case 'light':
-      return 'bg-white text-zinc-800';
-    case 'dark':
-      return 'bg-gray-950 text-white';
+    case "light":
+      return "bg-white text-zinc-800";
+    case "dark":
+      return "bg-gray-950 text-white";
   }
 }
 
-export default function Button({ name, theme = 'dark', ...rest }: ButtonProps) {
+export default function Button({ name, theme = "dark", ...rest }: ButtonProps) {
   return (
     <button
       className={`px-12 py-4 rounded-[20px] text-sm font-light ${getTheme(
