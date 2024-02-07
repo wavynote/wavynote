@@ -8,13 +8,14 @@ import "@/assets/scss/style.scss";
 import Link from "next/link";
 
 export default function HomePage() {
+
   return (
     <div className="contentMin">
       <div className="">
         <section>
           <header className="header">
             <div className="titleWrap">
-              <Link href="/" className="prev">
+              <Link href="/folder" className="prev">
               </Link>
               <h2>나의노트</h2>
             </div>
@@ -24,14 +25,16 @@ export default function HomePage() {
               <TextBtn name="삭제" type="dark"></TextBtn>
               */}
               <TextBtn name="노트선택" type="light"></TextBtn>
-              <IconBtn name="" type="search"></IconBtn>
+              <Link href="/search"><IconBtn name="" type="search"></IconBtn></Link>
             </div>            
           </header>
         </section>
         <section>
           <div className="btnWrap">
             <div className="newNoteBtn">
-              <TextBtn name="새로운 노트 쓰기" type="newNote"></TextBtn>
+              <Link href="/write">
+                <TextBtn name="새로운 노트 쓰기" type="newNote"></TextBtn>
+              </Link>
             </div>
           </div>
         </section>

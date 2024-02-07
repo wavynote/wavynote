@@ -9,6 +9,7 @@ import "@/assets/scss/style.scss";
 import Link from "next/link";
 
 export default function folderEdit() {
+
   return (
     <div className="contentMin">
       <div className="">
@@ -26,10 +27,10 @@ export default function folderEdit() {
         <section className="bgScroll">
           <ul className="folderWrap">
             <li className="folderMin">
-              <FolderBtn name="폴더추가" type="disable"></FolderBtn>
+              <FolderBtn name="" type="disable"></FolderBtn>
             </li>
             <li className="folderMin">
-              <FolderBtn name="기본 폴더" type="focused"></FolderBtn>
+              <FolderBtn name="" type="focused"></FolderBtn>
             </li>
             <li className="folderMin">
               <FolderBtn name="나의 폴더" type="editable"></FolderBtn>

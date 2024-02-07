@@ -1,3 +1,7 @@
+"use client"
+import React from "react";
+import { useState } from "react";
+
 type FolderType = "light" | "dark" | "disable" | "editable" | "focused";
 
 interface FolderProps {
@@ -22,10 +26,16 @@ function getTheme(type: FolderType) {
 
 export default function FolderBtn({ name, type = "light", ...rest }: FolderProps) {
   
+  const [folderName, setFolderName] = useState("");
+
+  const onChangeFolderName = (e:any) =>{
+    setFolderName(e.target.value);
+  }
+
   return (
     <div className={`FolderBtn ${getTheme(type)}`} {...rest}>
       <button className="delBtn">삭제</button>
-      <input type="text" value={name}></input>
+      <input type="text" value={ folderName } onChange={onChangeFolderName} />
       <p>노트 <span>0</span>개</p>
     </div>
   );
