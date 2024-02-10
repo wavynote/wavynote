@@ -1,7 +1,7 @@
+
 import IconBtn from "@/components/IconBtn";
 import TextBtn from "@/components/TextBtn";
 import FolderBtn from "@/components/FolderBtn";
-
 
 import styles from "./page.module.scss";
 import "@/assets/scss/style.scss";
@@ -9,6 +9,7 @@ import "@/assets/scss/style.scss";
 import Link from "next/link";
 
 export default function folderList() {
+
   return (
     <div className="contentMin">
       <div className="">
