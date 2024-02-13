@@ -22,6 +22,7 @@
       display: flex;
       // gap: 20px;
       flex-direction: column;
+      gap: 10px;
 
       > section{
         padding: 0 20px;
@@ -40,7 +41,8 @@
         /* end of background color and scroll */
 
         &.writeWrap{
-          padding: 20px 0;
+          padding-right: 0;
+          margin-bottom: 20px;
         }
       }
     }
@@ -490,21 +492,25 @@
 /* start of write */
 .topicWrap{
   background-color: #DEDEE8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   .topic{
     padding: 14px 0;
   }
+
 }
 
 .writeWrap{
-  min-height: calc(100vh - 232px);
+  min-height: calc(100vh - 263px);
   height: 100%;
 
   textarea{
     background-color: transparent;
     width: 100%;
-    padding-left: 20px;
     min-height: 100%;
+    resize: none;
 
     &::placeholder{
       color: #C6C6D0;

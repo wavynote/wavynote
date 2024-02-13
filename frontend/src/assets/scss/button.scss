@@ -85,4 +85,10 @@ button {
     height: 16px;
     background-image: url("./../images/icons/ic_ellipsis.svg");
   }
+
+  &.closeBtn{
+    width: 12px;
+    height: 12px;
+    background-image: url("./../images/icons/ic_close.svg");
+  }
 }
