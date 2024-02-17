@@ -518,3 +518,64 @@
   }
 }
 /* end of write */
+
+
+/* start of bottomSheet */
+.bottomSheetWrap{
+  width: 100%;
+  height: 100vh;
+  max-width: 768px;
+
+  position:absolute;
+  top:0;
+  left:50%;
+  transform: translateX(-50%);
+  z-index:2;
+  background-color: rgba(36,36,36,0.2);
+  backdrop-filter: blur(5px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  
+  .bottomSheetMin{
+    background-color: #ffffff;
+    border-radius: 15px 15px 0 0;
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    
+    .bottomSheetTitle{
+      display: flex;
+      align-items: center;
+
+      p{
+        flex-grow:1;
+        text-align:center;
+        font-size: 1.8rem;
+      }
+    }
+
+    .bottomList{
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      li{
+        display: flex;
+        justify-content: center;
+
+        button{
+          background-color: #F4F5F9;
+          padding: 12px 24px;
+          border-radius: 15px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+/* end of bottomSheet */
