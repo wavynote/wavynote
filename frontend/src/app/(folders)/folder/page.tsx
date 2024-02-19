@@ -8,7 +8,23 @@ import "@/assets/scss/style.scss";
 
 import Link from "next/link";
 
+const folderListTest = ['기본폴더','나의폴더','좋아요'];
+
+
 export default function folderList() {
+
+//   const getData = async ()=>{
+//     let testData = await fetch("https://192.168.219.124:16770/wavynote/v1.0/main/folderlist?id=somebody@naver.com", {
+//       method:'GET',
+//       headers: {
+//         'Authorization':'Basic',
+//         'Content-Type':'application/x-www-form-urlencoded',
+//       },
+//     });
+  
+//     let result = await testData.json();
+//     alert(result.message);
+//   }
 
   return (
     <div className="contentMin">
@@ -27,8 +43,14 @@ export default function folderList() {
         <section className="bgScroll">
           <ul className="folderWrap">
             <li className="folderMin">
-              <FolderBtn name="폴더추가" type="dark"></FolderBtn>
+              <button name="폴더추가" className="FolderBtn dark"></button>
             </li>
+            { folderListTest.map((folderList,index)=><li className="folderMin">
+              <button className="FolderBtn light">
+                {folderList}
+              </button>
+            </li>)}
+{/*             
             <li className="folderMin">
               <FolderBtn name="기본 폴더" type="light"></FolderBtn>
             </li>
@@ -37,7 +59,7 @@ export default function folderList() {
             </li>
             <li className="folderMin">
               <FolderBtn name="보낸노트" type="light"></FolderBtn>
-            </li>
+            </li> */}
           </ul>    
         </section>
       </div>
