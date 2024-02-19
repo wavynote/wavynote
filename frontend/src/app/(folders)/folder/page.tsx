@@ -1,3 +1,5 @@
+'use client';
+import { useEffect, useState } from 'react';
 
 import IconBtn from "@/components/IconBtn";
 import TextBtn from "@/components/TextBtn";
@@ -10,21 +12,21 @@ import Link from "next/link";
 
 const folderListTest = ['기본폴더','나의폴더','좋아요'];
 
-
 export default function folderList() {
 
-//   const getData = async ()=>{
-//     let testData = await fetch("https://192.168.219.124:16770/wavynote/v1.0/main/folderlist?id=somebody@naver.com", {
-//       method:'GET',
-//       headers: {
-//         'Authorization':'Basic',
-//         'Content-Type':'application/x-www-form-urlencoded',
-//       },
-//     });
-  
-//     let result = await testData.json();
-//     alert(result.message);
-//   }
+  const [folderName, getFolderName] = useState();
+
+  useEffect(() => {
+    fetch('https://localhost:16770/wavynote/v1.0/main/folderlist?id=somebody@naver.com',{
+      method:'GET',
+      headers: {
+        'Authorization':'Basic',
+        'Content-Type':'application/x-www-form-urlencoded',
+      },
+    })
+    .then((res) => res.json())
+    .then((data) => alert(data[0]));
+  })
 
   return (
     <div className="contentMin">
@@ -45,9 +47,9 @@ export default function folderList() {
             <li className="folderMin">
               <button name="폴더추가" className="FolderBtn dark"></button>
             </li>
-            { folderListTest.map((folderList,index)=><li className="folderMin">
+            { folderListTest.map((folderName,index)=><li className="folderMin">
               <button className="FolderBtn light">
-                {folderList}
+                {folderName}
               </button>
             </li>)}
 {/*             
