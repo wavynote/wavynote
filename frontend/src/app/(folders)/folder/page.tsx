@@ -17,16 +17,15 @@ export default function folderList() {
   const [folderName, getFolderName] = useState();
 
   useEffect(() => {
-    fetch('https://localhost:16770/wavynote/v1.0/main/folderlist?id=somebody@naver.com',{
+    fetch('/main/folderlist?id=wavynote', {
       method:'GET',
       headers: {
-        'Authorization':'Basic',
-        'Content-Type':'application/x-www-form-urlencoded',
-      },
-    })
+        'Authorization':'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
+        'Content-Type':'application/json',
+      },})
     .then((res) => res.json())
     .then((data) => alert(data[0]));
-  })
+  }, []);
 
   return (
     <div className="contentMin">
