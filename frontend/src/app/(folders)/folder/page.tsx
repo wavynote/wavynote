@@ -10,21 +10,70 @@ import "@/assets/scss/style.scss";
 
 import Link from "next/link";
 
-const folderListTest = ['기본폴더','나의폴더','좋아요'];
+// import { getFolderList }  from "@/service/folder";
 
-export default function folderList() {
+// const folderListTest = ['기본폴더','나의폴더','좋아요'];
 
-  const [folderName, getFolderName] = useState();
+interface Folder {
+  folder_id: string;
+  folder_name: string;
+  note_count: number;
+}
+
+export default function FolderList() {
+
+  // const [folders, setFolders] = useState<Folder[]>([]);
+
+  // useEffect(() => {
+  //   const fetchFolderList = async (userId:string) => {
+  //     try {
+  //       const response = await fetch(`/wavynote/v1.0/main/folderlist?id=${userId}`, {
+  //         method: 'GET',
+  //         cache: 'no-store',
+  //         headers: {
+  //           'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
+  //           'Content-Type': 'application/json',
+  //         },
+  //       });
+  //       const responseData = await response.json();
+  //       // responseData의 형태가 { "data": [...] } 이므로 data 속성을 가져옴
+  //       const folderData = responseData.data;
+  //       // folderData의 각 요소에서 folder_name과 note_count를 추출하여 새로운 배열을 생성
+  //       const formattedFolders = folderData.map((folder:Folder) => ({
+  //         folderName: folder.folder_name,
+  //         noteCount: folder.note_count
+  //       }));
+  //       // 새로 가공된 배열을 상태로 설정
+  //       setFolders(formattedFolders);
+  //     } catch (error) {
+  //       console.error('Error fetching folder list:', error);
+  //     }
+  //   };
+
+  //   fetchFolderList('somebody@naver.com');
+  // }, []);
+
+  const [folders, setFolders] = useState<Folder[]>([]);
 
   useEffect(() => {
-    fetch('/main/folderlist?id=wavynote', {
-      method:'GET',
-      headers: {
-        'Authorization':'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
-        'Content-Type':'application/json',
-      },})
-    .then((res) => res.json())
-    .then((data) => alert(data[0]));
+    const fetchFolderList = async (userId: string) => {
+      try {
+        const response = await fetch(`/wavynote/v1.0/main/folderlist?id=${userId}`, {
+          method: 'GET',
+          cache: 'no-store',
+          headers: {
+            'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setFolders(data.data); // Here, we extract the 'data' array from the response
+      } catch (error) {
+        console.error('Error fetching folder list:', error);
+      }
+    };
+
+    fetchFolderList('somebody@naver.com');
   }, []);
 
   return (
@@ -46,13 +95,15 @@ export default function folderList() {
             <li className="folderMin">
               <button name="폴더추가" className="FolderBtn dark"></button>
             </li>
-            { folderListTest.map((folderName,index)=><li className="folderMin">
-              <button className="FolderBtn light">
-                {folderName}
-              </button>
-            </li>)}
-{/*             
-            <li className="folderMin">
+            {folders.map((folder, index) => (
+              <li key={folder.folder_id} className="folderMin">
+                <button className="FolderBtn light">
+                  {folder.folder_name}
+                </button>
+              </li>
+            ))}
+             
+            {/*<li className="folderMin">
               <FolderBtn name="기본 폴더" type="light"></FolderBtn>
             </li>
             <li className="folderMin">
