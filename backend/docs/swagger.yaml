@@ -1,0 +1,1372 @@
+definitions:
+  restapi.AddFolderRequest:
+    properties:
+      folder_name:
+        description: 추가할 폴더 이름
+        example: my wavywavy
+        type: string
+      user_id:
+        description: 사용자 id
+        example: wavynoteadmin@gmail.com
+        type: string
+    type: object
+  restapi.ChangeFolderNameRequest:
+    properties:
+      folder_id:
+        description: 이름을 변경할 폴더의 고유 id 값
+        example: a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b
+        type: string
+      folder_name:
+        description: 변경할 폴더 이름
+        example: whatever
+        type: string
+      user_id:
+        description: 이름을 변경할 폴더를 소유하고 있는 사용자 ID
+        example: wavynoteadmin@gmail.com
+        type: string
+    type: object
+  restapi.ChangeNoteFolderRequest:
+    properties:
+      folder_id:
+        description: 노트가 저장되는 폴더의 고유 id 값
+        example: 980e71ba-0395-49aa-833e-3ebc76b3ec88
+        type: string
+      notes:
+        description: 폴더를 변경할 노트의 고유 id 값
+        example:
+        - 09d05df1-2958-4a3d-b910-3b4fb079327b
+        items:
+          type: string
+        type: array
+      user_id:
+        description: 사용자 id
+        example: wavynoteadmin@gmail.com
+        type: string
+    type: object
+  restapi.ConversationInfo:
+    properties:
+      conversation_id:
+        description: 대화방 고유의 id 값
+        example: 1afc571d-61bf-4cef-95ce-ab791f999297
+        type: string
+      new_note:
+        description: 대화방에 읽지않은 노트가 존재하는지 여부
+        example: true
+        type: boolean
+      note_count:
+        description: 대화방에 존재하는 노트의 총 개수
+        example: 20
+        type: integer
+      opp_nickname:
+        description: 대화 상대의 별명
+        example: somebody
+        type: string
+    type: object
+  restapi.ConversationListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/restapi.ConversationInfo'
+        type: array
+    type: object
+  restapi.ConversationNoteInfo:
+    properties:
+      from_id:
+        description: 노트 송신자 id
+        example: wavynoteadmin@gmail.com
+        type: string
+      note_id:
+        description: 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+      preview:
+        description: 노트 본문 미리보기
+        example: This is the main text of my first wavy note.
+        type: string
+      send_at:
+        description: 노트 전송 시간
+        example: "2023-10-29 21:00:48"
+        type: string
+      title:
+        description: 노트 제목
+        example: my first note
+        type: string
+      to_id:
+        description: 노트 수신자 id
+        example: somebody@naver.com
+        type: string
+    type: object
+  restapi.ConverstaionNoteListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/restapi.ConversationNoteInfo'
+        type: array
+    type: object
+  restapi.DefaultResponse:
+    properties:
+      msg:
+        description: 실패 시 반환하는 에러 메시지
+        type: string
+      result:
+        description: 요청에 대한 처리 성공/실패 여부
+        example: "true"
+        type: string
+    type: object
+  restapi.FolderListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/restapi.FolderSimpleInfo'
+        type: array
+    type: object
+  restapi.FolderSimpleInfo:
+    properties:
+      folder_id:
+        description: 폴더의 고유 id 값
+        example: a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b
+        type: string
+      folder_name:
+        description: 폴더 이름
+        example: my diary
+        type: string
+      note_count:
+        description: 폴더에 존재하는 노트의 총 개수
+        example: 5
+        type: integer
+    type: object
+  restapi.LandingPageResonse:
+    properties:
+      folder_id:
+        description: 랜딩 페이지에서 보여줄 폴더의 고유 id 값
+        example: 283744fe-7074-4ffa-abc6-dae8cb786058
+        type: string
+      user_id:
+        description: 사용자 id
+        example: somebody@naver.com
+        type: string
+    type: object
+  restapi.NoteInfo:
+    properties:
+      content:
+        description: 노트의 본문 내용
+        example: This is the main text of my first wavy note.
+        type: string
+      conversation_id:
+        description: 대화방의 고유 id 값
+        example: 1afc571d-61bf-4cef-95ce-ab791f999297
+        type: string
+      folder_id:
+        description: 노트가 포함되어 있는 폴더의 고유 id 값
+        example: 980e71ba-0395-49aa-833e-3ebc76b3ec88
+        type: string
+      from_id:
+        description: 노트 작성자(또는 송신자)의 id
+        example: wavynoteadmin@gmail.com
+        type: string
+      keywords:
+        description: 노트의 키워드
+        example:
+        - b0d88d67-01fd-47f8-b426-6ca0657d0f6e
+        items:
+          type: string
+        type: array
+      note_id:
+        description: 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+      save_at:
+        description: 노트를 저장한 마지막 날짜 및 시간 정보
+        example: "2023-11-01 21:00:00"
+        type: string
+      send_at:
+        description: 노트를 송신한 날짜 및 시간 정보
+        example: "2023-11-01 23:20:12"
+        type: string
+      title:
+        description: 노트의 제목
+        example: my first note
+        type: string
+      to_id:
+        description: 노트 수신자의 id
+        example: somebody@naver.com
+        type: string
+    type: object
+  restapi.NoteListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/restapi.NoteSimpleInfo'
+        type: array
+    type: object
+  restapi.NoteSimpleInfo:
+    properties:
+      note_id:
+        description: 해당 폴더에 존재하는 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+      preview:
+        description: 해당 폴더에 존재하는 노트의 본문 미리보기(글자수 제한)
+        example: This is the main text of my first wavy note.
+        type: string
+      title:
+        description: 해당 폴더에 존재하는 노트의 제목
+        example: my first note
+        type: string
+    type: object
+  restapi.OpenNoteListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/restapi.OpenNoteSimpleInfo'
+        type: array
+    type: object
+  restapi.OpenNoteSimpleInfo:
+    properties:
+      conversation_id:
+        description: 오픈 노트 공유를 통해 생성된 대화방 고유 id 값
+        example: 1afc571d-61bf-4cef-95ce-ab791f999297
+        type: string
+      note_id:
+        description: 오픈 노트에 공유한 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+      post_at:
+        description: 오픈 노트에 공유한 시간
+        example: "2023-12-19 15:55:48"
+        type: string
+      preview:
+        description: 오픈 노트에 공유한 노트의 본문 미리보기
+        example: This is the main text of my first wavy note.
+        type: string
+      title:
+        description: 오픈 노트에 공유한 노트의 제목
+        example: my first note
+        type: string
+    type: object
+  restapi.RandomMatchRequest:
+    properties:
+      from_id:
+        description: 노트를 보내는 사용자의 id
+        example: wavynoteadmin@gmail.com
+        type: string
+      note_id:
+        description: 랜덤 매칭을 통해 임의의 대상에게 보낼 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+    type: object
+  restapi.RemoveFolderInfo:
+    properties:
+      folder_id:
+        description: 삭제할 폴더의 고유 id 값
+        example: a3106a0c-5ce7-40f6-81f4-ff9b8ebb240b
+        type: string
+      folder_name:
+        description: 삭제할 폴더의 이름
+        example: my diary
+        type: string
+    type: object
+  restapi.RemoveFolderRequest:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/restapi.RemoveFolderInfo'
+        type: array
+      user_id:
+        description: 사용자 id
+        example: wavynoteadmin@gmail.com
+        type: string
+    type: object
+  restapi.RemoveNoteInfo:
+    properties:
+      folder_id:
+        description: 삭제할 노트가 포함되어 있는 폴더의 고유 id 값
+        example: 980e71ba-0395-49aa-833e-3ebc76b3ec88
+        type: string
+      note_id:
+        description: 삭제할 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+    type: object
+  restapi.RemoveNoteRequest:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/restapi.RemoveNoteInfo'
+        type: array
+      user_id:
+        description: 사용자 id
+        example: wavynoteadmin@gmail.com
+        type: string
+    type: object
+  restapi.Response400:
+    properties:
+      code:
+        example: 400
+        type: integer
+      msg:
+        example: Bad request
+        type: string
+    type: object
+  restapi.Response401:
+    properties:
+      code:
+        example: 401
+        type: integer
+      msg:
+        example: Fail to parse Authorization header
+        type: string
+    type: object
+  restapi.Response404:
+    properties:
+      code:
+        example: 404
+        type: integer
+      msg:
+        example: Not exist the target resource in our server
+        type: string
+    type: object
+  restapi.Response500:
+    properties:
+      code:
+        example: 500
+        type: integer
+      msg:
+        example: Internal server error
+        type: string
+    type: object
+  restapi.SaveNoteRequest:
+    properties:
+      content:
+        description: 내가 작성한 노트의 본문 내용
+        example: This is the main text of my first wavy note.
+        type: string
+      folder_id:
+        description: 내가 작성한 노트가 포함되어 있는 폴더의 고유 id 값
+        example: 980e71ba-0395-49aa-833e-3ebc76b3ec88
+        type: string
+      from_id:
+        description: 작성자의 id
+        example: wavynoteadmin@gmail.com
+        type: string
+      keywords:
+        description: 내가 작성한 노트의 키워드
+        example:
+        - b0d88d67-01fd-47f8-b426-6ca0657d0f6e
+        items:
+          type: string
+        type: array
+      title:
+        description: 내가 작성한 노트의 제목
+        example: my first note
+        type: string
+    type: object
+  restapi.SendNoteRequest:
+    properties:
+      conversation_id:
+        description: 대화방의 고유 id 값
+        example: 1afc571d-61bf-4cef-95ce-ab791f999297
+        type: string
+      from_id:
+        description: 작성자의 id
+        example: wavynoteadmin@gmail.com
+        type: string
+      note_id:
+        description: 내가 작성한 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+      to_id:
+        description: 내가 작성한 노트를 보내는 대상의 id
+        example: somebody@naver.com
+        type: string
+    type: object
+  restapi.ShareNoteRequest:
+    properties:
+      host_id:
+        description: 오픈 노트에 공유한 사용자 id
+        example: wavynoteadmin@gmail.com
+        type: string
+      note_id:
+        description: 오픈 노트에 공유할 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+    type: object
+  restapi.SignInRequest:
+    properties:
+      id:
+        description: 로그인시 입력한 ID
+        example: somebody@naver.com
+        type: string
+      password:
+        description: 로그인시 입력한 패스워드
+        example: 04F0BF9AB5963706415A0EC4C0E8167EBC8640B0B9A40870CDC39BE8A8DA813B
+        type: string
+    type: object
+  restapi.SignUpRequest:
+    properties:
+      emoji:
+        description: 회원 가입시 입력한 이모지
+        example: "\U0001F60E"
+        type: string
+      id:
+        description: 회원 가입시 입력한 ID
+        example: somebody@naver.com
+        type: string
+      keywords:
+        description: 회원 가입시 입력한 키워드
+        example:
+        - b0d88d67-01fd-47f8-b426-6ca0657d0f6e
+        items:
+          type: string
+        type: array
+      nickname:
+        description: 회원 가입시 입력한 닉네임
+        example: somebody
+        type: string
+      password:
+        description: 회원 가입시 입력한 패스워드
+        example: 04F0BF9AB5963706415A0EC4C0E8167EBC8640B0B9A40870CDC39BE8A8DA813B
+        type: string
+    type: object
+  restapi.UpdateNoteRequest:
+    properties:
+      content:
+        description: 내가 작성한 노트의 본문 내용
+        example: This is the main text of my first wavy note.
+        type: string
+      folder_id:
+        description: 내가 작성한 노트가 포함되어 있는 폴더의 고유 id 값
+        example: 980e71ba-0395-49aa-833e-3ebc76b3ec88
+        type: string
+      from_id:
+        description: 작성자의 id
+        example: wavynoteadmin@gmail.com
+        type: string
+      keywords:
+        description: 내가 작성한 노트의 키워드
+        example:
+        - b0d88d67-01fd-47f8-b426-6ca0657d0f6e
+        items:
+          type: string
+        type: array
+      note_id:
+        description: 내가 작성한 노트의 고유 id 값
+        example: 09d05df1-2958-4a3d-b910-3b4fb079327b
+        type: string
+      title:
+        description: 내가 작성한 노트의 제목
+        example: my first note
+        type: string
+    type: object
+info:
+  contact:
+    email: chelseafandev@gmail.com
+    name: wavynote
+paths:
+  /box/conversation:
+    delete:
+      description: 특정 대화방 삭제
+      parameters:
+      - description: user id
+        in: query
+        name: uid
+        type: string
+      - description: conversation id
+        in: query
+        name: cid
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 대화방 삭제
+      tags:
+      - 받은노트 페이지
+  /box/conversationlist:
+    get:
+      description: 노트를 주고 받는 대화방 목록 조회(최대 3개)
+      parameters:
+      - description: user id
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: 조회된 대화방 목록 정보
+          schema:
+            $ref: '#/definitions/restapi.ConversationListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 노트를 주고 받는 대화방 목록 조회(최대 3개)
+      tags:
+      - 받은노트 페이지
+  /box/notelist:
+    get:
+      description: 특정 친구와 주고받은 노트 목록
+      parameters:
+      - description: conversation id
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: 주고 받은 노트 목록
+          schema:
+            $ref: '#/definitions/restapi.ConverstaionNoteListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 친구와 주고받은 노트 목록
+      tags:
+      - 받은노트 페이지
+  /box/show:
+    get:
+      description: 특정 노트 조회
+      parameters:
+      - description: conversation id
+        in: query
+        name: cid
+        type: string
+      - description: note id
+        in: query
+        name: nid
+        type: string
+      - description: user id
+        in: query
+        name: uid
+        type: string
+      responses:
+        "200":
+          description: 조회한 노트 정보
+          schema:
+            $ref: '#/definitions/restapi.NoteInfo'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 노트 조회
+      tags:
+      - 받은노트 페이지
+  /main/folder:
+    delete:
+      description: 특정 폴더 삭제
+      parameters:
+      - description: 삭제할 폴더 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.RemoveFolderRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 폴더 삭제
+      tags:
+      - 나의노트 페이지
+    post:
+      description: 폴더 추가
+      parameters:
+      - description: 추가할 폴더 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.AddFolderRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 폴더 추가
+      tags:
+      - 나의노트 페이지
+    put:
+      description: 특정 폴더 이름 변경
+      parameters:
+      - description: 변경하고자 하는 폴더 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.ChangeFolderNameRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 폴더 이름 변경
+      tags:
+      - 나의노트 페이지
+  /main/folderlist:
+    get:
+      description: 존재하는 모든 폴더 목록 조회
+      parameters:
+      - description: user id
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: 폴더 목록 정보
+          schema:
+            $ref: '#/definitions/restapi.FolderListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 존재하는 모든 폴더 목록 조회
+      tags:
+      - 나의노트 페이지
+  /main/note:
+    delete:
+      description: 내가 작성한 특정 노트 삭제
+      parameters:
+      - description: 삭제할 노트 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.RemoveNoteRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 내가 작성한 특정 노트 삭제
+      tags:
+      - 나의노트 페이지
+  /main/notefolder:
+    put:
+      description: 노트가 저장되는 폴더 변경
+      parameters:
+      - description: 노트를 저장할 (변경할)폴더 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.ChangeNoteFolderRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 노트가 저장되는 폴더 변경
+      tags:
+      - 나의노트 페이지
+  /main/notelist:
+    get:
+      description: 특정 폴더에 존재하는 모든 노트 조회
+      parameters:
+      - description: user id
+        in: query
+        name: uid
+        type: string
+      - description: folder id
+        in: query
+        name: fid
+        type: string
+      responses:
+        "200":
+          description: 노트 목록 정보
+          schema:
+            $ref: '#/definitions/restapi.NoteListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 폴더에 존재하는 모든 노트 조회
+      tags:
+      - 나의노트 페이지
+  /opennote/list:
+    get:
+      description: 사용자 키워드 기반으로 오픈노트에 공유된 노트 목록 조회
+      parameters:
+      - description: user id
+        in: query
+        name: uid
+        type: string
+      responses:
+        "200":
+          description: 오픈노트에 공유된 노트 목록
+          schema:
+            $ref: '#/definitions/restapi.OpenNoteListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 사용자 키워드 기반으로 오픈노트에 공유된 노트 목록 조회
+      tags:
+      - 오픈노트 페이지
+  /opennote/show:
+    get:
+      description: 특정 오픈노트 조회
+      parameters:
+      - description: note id
+        in: query
+        name: nid
+        type: string
+      - description: conversation id
+        in: query
+        name: cid
+        type: string
+      responses:
+        "200":
+          description: 조회한 오픈노트 정보
+          schema:
+            $ref: '#/definitions/restapi.NoteInfo'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 오픈노트 조회
+      tags:
+      - 오픈노트 페이지
+  /profile/duplicate:
+    get:
+      description: 회원 가입 시 ID 중복 체크
+      parameters:
+      - description: user id
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 회원 가입 시 ID 중복 체크
+      tags:
+      - SignUp/SignIn 페이지
+  /profile/signin:
+    post:
+      description: 로그인 요청
+      parameters:
+      - description: 로그인 요청
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.SignInRequest'
+      responses:
+        "200":
+          description: 랜딩페이지 출력 시 필요한 정보
+          schema:
+            $ref: '#/definitions/restapi.LandingPageResonse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 로그인 요청
+      tags:
+      - SignUp/SignIn 페이지
+  /profile/signup:
+    post:
+      description: 회원 가입 요청
+      parameters:
+      - description: 회원 가입 요청 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.SignUpRequest'
+      responses:
+        "200":
+          description: 랜딩페이지 출력 시 필요한 정보
+          schema:
+            $ref: '#/definitions/restapi.LandingPageResonse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 회원 가입 요청
+      tags:
+      - SignUp/SignIn 페이지
+  /search/folder:
+    get:
+      description: 특정 폴더를 대상으로 노트 검색
+      parameters:
+      - description: target folder id
+        in: query
+        name: id
+        type: string
+      - description: query for search
+        in: query
+        name: query
+        type: string
+      responses:
+        "200":
+          description: 검색어가 포함된 노트 정보
+          schema:
+            $ref: '#/definitions/restapi.NoteListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 특정 폴더를 대상으로 노트 검색
+      tags:
+      - 나의노트 페이지
+  /search/opennote:
+    get:
+      description: 오픈노트 대상으로 노트 내용 검색
+      parameters:
+      - description: query for search
+        in: query
+        name: query
+        type: string
+      responses:
+        "200":
+          description: 검색어가 포함된 오픈노트 정보
+          schema:
+            $ref: '#/definitions/restapi.OpenNoteListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 오픈노트 대상으로 노트 내용 검색
+      tags:
+      - 오픈노트 페이지
+  /search/top:
+    get:
+      description: 전체 폴더를 대상으로 노트 내용 검색
+      parameters:
+      - description: user id
+        in: query
+        name: id
+        type: string
+      - description: query for search
+        in: query
+        name: query
+        type: string
+      responses:
+        "200":
+          description: 검색어가 포함된 노트 정보
+          schema:
+            $ref: '#/definitions/restapi.NoteListResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 전체 폴더를 대상으로 노트 내용 검색
+      tags:
+      - 나의노트 페이지
+  /write/opennote:
+    post:
+      description: 내가 작성한 노트를 오픈 노트에 공유하기
+      parameters:
+      - description: 오픈 노트에 공유를 위한 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.ShareNoteRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 내가 작성한 노트를 오픈 노트에 공유하기
+      tags:
+      - 나의노트 페이지
+  /write/random:
+    post:
+      description: 내가 작성한 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
+      parameters:
+      - description: 랜덤 매칭을 통해 보낼 노트 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.RandomMatchRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 내가 작성한 노트를 랜덤 매칭을 통해 (비슷한 관심 주제를 갖는)임의의 대상에게 보내기
+      tags:
+      - 나의노트 페이지
+  /write/save:
+    post:
+      description: 내가 작성한 노트 저장
+      parameters:
+      - description: 저장할 노트 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.SaveNoteRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 내가 작성한 노트 저장
+      tags:
+      - 나의노트 페이지
+    put:
+      description: 내가 작성한 노트 갱신
+      parameters:
+      - description: 갱신할 노트 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.UpdateNoteRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 내가 작성한 노트 갱신
+      tags:
+      - 나의노트 페이지
+  /write/send:
+    post:
+      description: 내가 작성한 노트를 특정 대상에게 보내기
+      parameters:
+      - description: 특정 대상에게 보낼 노트 정보
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/restapi.SendNoteRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/restapi.DefaultResponse'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 내가 작성한 노트를 특정 대상에게 보내기
+      tags:
+      - 나의노트 페이지
+  /write/show:
+    get:
+      description: 내가 작성한 노트 조회
+      parameters:
+      - description: user id
+        in: query
+        name: uid
+        type: string
+      - description: note id
+        in: query
+        name: nid
+        type: string
+      responses:
+        "200":
+          description: 내가 작성한 노트 정보
+          schema:
+            $ref: '#/definitions/restapi.NoteInfo'
+        "400":
+          description: 요청에 포함된 파라미터 값이 잘못된 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response400'
+        "401":
+          description: 인증에 실패한 경우이며, 실패 사유가 전달됩니다
+          schema:
+            $ref: '#/definitions/restapi.Response401'
+        "404":
+          description: 요청한 리소스가 서버에 존재하지 않는 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response404'
+        "500":
+          description: 요청을 처리하는 과정에서 서버에 문제가 발생한 경우입니다
+          schema:
+            $ref: '#/definitions/restapi.Response500'
+      security:
+      - BasicAuth: []
+      summary: 내가 작성한 노트 조회
+      tags:
+      - 나의노트 페이지
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
