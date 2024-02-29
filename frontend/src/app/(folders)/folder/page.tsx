@@ -8,11 +8,7 @@ import FolderBtn from "@/components/FolderBtn";
 import styles from "./page.module.scss";
 import "@/assets/scss/style.scss";
 
-import Link from "next/link";
-
 // import { getFolderList }  from "@/service/folder";
-
-// const folderListTest = ['기본폴더','나의폴더','좋아요'];
 
 interface Folder {
   folder_id: string;
@@ -21,37 +17,6 @@ interface Folder {
 }
 
 export default function FolderList() {
-
-  // const [folders, setFolders] = useState<Folder[]>([]);
-
-  // useEffect(() => {
-  //   const fetchFolderList = async (userId:string) => {
-  //     try {
-  //       const response = await fetch(`/wavynote/v1.0/main/folderlist?id=${userId}`, {
-  //         method: 'GET',
-  //         cache: 'no-store',
-  //         headers: {
-  //           'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
-  //           'Content-Type': 'application/json',
-  //         },
-  //       });
-  //       const responseData = await response.json();
-  //       // responseData의 형태가 { "data": [...] } 이므로 data 속성을 가져옴
-  //       const folderData = responseData.data;
-  //       // folderData의 각 요소에서 folder_name과 note_count를 추출하여 새로운 배열을 생성
-  //       const formattedFolders = folderData.map((folder:Folder) => ({
-  //         folderName: folder.folder_name,
-  //         noteCount: folder.note_count
-  //       }));
-  //       // 새로 가공된 배열을 상태로 설정
-  //       setFolders(formattedFolders);
-  //     } catch (error) {
-  //       console.error('Error fetching folder list:', error);
-  //     }
-  //   };
-
-  //   fetchFolderList('somebody@naver.com');
-  // }, []);
 
   const [folders, setFolders] = useState<Folder[]>([]);
 
@@ -93,7 +58,7 @@ export default function FolderList() {
         <section className="bgScroll">
           <ul className="folderWrap">
             <li className="folderMin">
-              <button name="폴더추가" className="FolderBtn dark"></button>
+              <button name="폴더추가" className="FolderBtn dark">폴더추가</button>
             </li>
             {folders.map((folder, index) => (
               <li key={folder.folder_id} className="folderMin">
@@ -102,16 +67,6 @@ export default function FolderList() {
                 </button>
               </li>
             ))}
-             
-            {/*<li className="folderMin">
-              <FolderBtn name="기본 폴더" type="light"></FolderBtn>
-            </li>
-            <li className="folderMin">
-              <FolderBtn name="나의 폴더" type="light"></FolderBtn>
-            </li>
-            <li className="folderMin">
-              <FolderBtn name="보낸노트" type="light"></FolderBtn>
-            </li> */}
           </ul>    
         </section>
       </div>

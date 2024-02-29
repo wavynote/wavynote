@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-    reactStrictMode: true,
+    reactStrictMode: false,
     // serverRuntimeConfig: {
     //   https: process.env.NEXT_PUBLIC_HTTPS === 'true',
     //   key: process.env.NEXT_PUBLIC_SSL_KEY,
