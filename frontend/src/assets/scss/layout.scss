@@ -22,6 +22,7 @@
       display: flex;
       // gap: 20px;
       flex-direction: column;
+      gap: 10px;
 
       > section{
         padding: 0 20px;
@@ -40,7 +41,8 @@
         /* end of background color and scroll */
 
         &.writeWrap{
-          padding: 20px 0;
+          padding-right: 0;
+          margin-bottom: 20px;
         }
       }
     }
@@ -67,6 +69,13 @@
         display: flex;
         align-items: center;
         gap: 20px;
+
+        .headerBtnMin{
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
       }
     }
 
@@ -483,21 +492,25 @@
 /* start of write */
 .topicWrap{
   background-color: #DEDEE8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   .topic{
     padding: 14px 0;
   }
+
 }
 
 .writeWrap{
-  min-height: calc(100vh - 232px);
+  min-height: calc(100vh - 263px);
   height: 100%;
 
   textarea{
     background-color: transparent;
     width: 100%;
-    padding-left: 20px;
     min-height: 100%;
+    resize: none;
 
     &::placeholder{
       color: #C6C6D0;
@@ -505,3 +518,64 @@
   }
 }
 /* end of write */
+
+
+/* start of bottomSheet */
+.bottomSheetWrap{
+  width: 100%;
+  height: 100vh;
+  max-width: 768px;
+
+  position:absolute;
+  top:0;
+  left:50%;
+  transform: translateX(-50%);
+  z-index:2;
+  background-color: rgba(36,36,36,0.2);
+  backdrop-filter: blur(5px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  
+  .bottomSheetMin{
+    background-color: #ffffff;
+    border-radius: 15px 15px 0 0;
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    
+    .bottomSheetTitle{
+      display: flex;
+      align-items: center;
+
+      p{
+        flex-grow:1;
+        text-align:center;
+        font-size: 1.8rem;
+      }
+    }
+
+    .bottomList{
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      li{
+        display: flex;
+        justify-content: center;
+
+        button{
+          background-color: #F4F5F9;
+          padding: 12px 24px;
+          border-radius: 15px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+/* end of bottomSheet */

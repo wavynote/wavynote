@@ -10,6 +10,9 @@ import Nav from "@/components/Nav";
 export const metadata: Metadata = {
   title: "WavyNote",
   description: "",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 const nanumSquareNeo = localFont({
@@ -24,7 +27,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main className="contentWrap">
           {children}
         </main>
-        <Nav />      
+        <Nav />
+        {/* 구조 바꿔야할것 같음 for popup 이랑 bottomSheet 때문에 */}
       </body>
     </html>
   );

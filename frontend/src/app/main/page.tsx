@@ -1,6 +1,9 @@
+"use client"
+import React from "react";
+import { useState } from "react";
+
 import IconBtn from "@/components/IconBtn";
 import TextBtn from "@/components/TextBtn";
-
 
 import styles from "./page.module.scss";
 import "@/assets/scss/style.scss";
@@ -8,6 +11,12 @@ import "@/assets/scss/style.scss";
 import Link from "next/link";
 
 export default function HomePage() {
+
+  // 토글 리스트 수정
+  const [isOpenHeaderBtn, setToggleBtn] = useState(true);
+  function toggleHeaderBtn(){
+    setToggleBtn((isOpenHeaderBtn) => !isOpenHeaderBtn);
+  }
 
   return (
     <div className="contentMin">
@@ -19,14 +28,16 @@ export default function HomePage() {
               </Link>
               <h2>나의노트</h2>
             </div>
-            <div className="headerBtnWrap">
-              { /*
-              <TextBtn name="폴더이동" type="light"></TextBtn>
-              <TextBtn name="삭제" type="dark"></TextBtn>
-              */}
-              <TextBtn name="노트선택" type="light"></TextBtn>
+            {!isOpenHeaderBtn && <div className="headerBtnWrap">
+              <div>
+                <TextBtn name="폴더이동" type="light"></TextBtn>
+                <TextBtn name="삭제" type="dark"></TextBtn>
+              </div>
+            </div>}
+            {isOpenHeaderBtn && <div className="headerBtnWrap">
+              <button className="textBtn light" onClick={toggleHeaderBtn}>노트선택</button>
               <Link href="/search"><IconBtn name="" type="search"></IconBtn></Link>
-            </div>            
+            </div>}           
           </header>
         </section>
         <section>

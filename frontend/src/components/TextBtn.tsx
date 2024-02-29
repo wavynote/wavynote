@@ -1,11 +1,8 @@
-import Link from "next/link";
-
 type ButtonType = "light" | "dark" | "newNote";
 
 interface ButtonProps {
   name: string;
-  type: ButtonType;  
-  component: React.ElementType;
+  type: ButtonType;
 }
 
 function getTheme(type: ButtonType) {
