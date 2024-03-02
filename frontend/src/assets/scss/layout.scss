@@ -327,6 +327,89 @@
         }
       }
     }
+
+    .newNoteList{
+      padding: 0 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-bottom: 20px;
+
+      .list{
+        background-color: #ffffff;
+        width: 100%;
+        padding: 16px 20px;
+        border-radius: 20px 20px 20px 0;
+        border-bottom: 0;
+        filter: drop-shadow(0px 1px 5px rgba(0,0,0,0.01));
+      }
+    }
+
+    .matchList{
+      padding: 0 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-bottom: 20px;
+
+      .list{
+        background-color: #ffffff;
+        width: 100%;
+        padding: 16px 20px;
+        border-radius: 20px;
+        border-bottom: 0;
+        filter: drop-shadow(0px 1px 5px rgba(0,0,0,0.01));
+
+        .matchCont{
+          display: flex;
+          gap: 25px;
+
+          .imgWrap{
+            width: 50px;
+
+            img{
+              width: 100%;
+            }
+          }
+
+          .textWrap{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: calc(100% - 80px);
+
+            h4{
+              font-size: 1.8rem;
+              font-weight: 500;
+              line-height: 130%;
+            }
+
+            p{
+              font-size: 1.4rem;
+              span{font-weight:700;}
+            }
+          } 
+        }
+
+        &.emptyMatch{
+          background-color: transparent;
+          border: 1px dashed #AAAAAA;
+          
+          .textWrap{
+            width: 100%;
+            text-align: center;
+
+            h4{
+              font-weight: 400;
+            }
+          }
+        }
+      }
+
+      
+    }
   }
 
   &:has(.noList){
@@ -338,6 +421,8 @@
       font-size: 2.4rem;
     }
   }  
+
+  
 
   
 }
@@ -572,3 +657,93 @@
   }
 }
 /* end of bottomSheet */
+
+/* start of tabWrap */
+.tabWrap{
+  width: 100%;
+
+  .tabMin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    height: 70px;
+
+    button{
+      display: flex;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 400;
+      gap: 30px;
+      color: rgba(4,1,19,0.3);
+
+      &:first-child{
+        &::after{
+          content: '';
+          display: block;
+          width: 1px;
+          height: 20px;
+          background-color: #333333;
+        }
+      }
+
+      &.active{
+        color: rgba(4,1,19,1);
+      }
+    }
+  }
+  
+}
+
+/* end of tabWrap */
+
+.areaGap{
+  width: 100%;
+  height: 12px;
+  background-color: #DEDEE8;
+}
+
+/* start of userInfo */
+.userInfo{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 20px;
+
+  .userImg{
+    width: 90px;
+    height: 90px;
+    background-color: #ffffff;
+    border-radius: 45px;
+  }
+
+  .userName{
+    width: calc(100% - 120px);
+    font-size: 1.8rem;
+    font-weight: 400;
+  }
+}
+/* end of userInfo */
+
+
+/* start of setList */
+.setList{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-top: 20px;
+
+  li{
+    width: 100%;
+    height: 30px;
+    font-size: 1.8rem;
+
+    a{
+      display: inline-block;
+    }
+  }
+}
+
+/* end of setList */

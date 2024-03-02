@@ -9,6 +9,10 @@ a{
     width: 10px;
     height: 16px;
   }
+
+  &.searchLink{
+    display: flex;
+  }
 }
 
 button {
@@ -21,7 +25,6 @@ button {
     color: #333333;
     height: 40px;
     text-align: center;
-    font-weight: 300;
   }
 
   &.newNote{

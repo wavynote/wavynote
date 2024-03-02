@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const nanumSquareNeo = localFont({
-  src: "./fonts/NanumSquareNeo-Variable.woff2",
+  src: "../fonts/NanumSquareNeo-Variable.woff2",
 });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
