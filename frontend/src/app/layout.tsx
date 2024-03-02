@@ -17,7 +17,6 @@ export const metadata: Metadata = {
 
 const nanumSquareNeo = localFont({
   src: "../fonts/NanumSquareNeo-Variable.woff2",
-  display: "swap",
 });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -26,8 +25,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <main className="contentWrap">
           {children}
-        </main>
-        <Nav />
+          <Nav />
+        </main>        
         {/* 구조 바꿔야할것 같음 for popup 이랑 bottomSheet 때문에 */}
       </body>
     </html>
