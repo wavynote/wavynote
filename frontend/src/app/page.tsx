@@ -1,17 +1,11 @@
-import Button from "@/components/Button";
 
-export default function HomePage() {
+import Nav from "@/components/Nav";
+
+export default function defaultPage() {
+  
   return (
-    <div className="contentMin">
-      <div className="noteListWrap">
-          <div className="noteListMin">
-            <p className="noList">
-              새로운 노트를
-              <br />
-              써보세요
-            </p>
-          </div>          
-        </div>      
-    </div>
+    <>
+      <Nav /> 
+    </>
   );
 }

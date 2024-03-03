@@ -1,0 +1,74 @@
+.introWrap{
+  max-width: 768px;
+  height: 100vh;
+  box-sizing: border-box;
+
+  .introMin{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    gap: 60px;
+    filter: grayscale(5);
+    background-repeat: no-repeat;
+    background-position: center -200px;
+    background-size: 700px auto;
+    transition: background-image 0.4s;
+
+    &.slide01{
+      background-image: url('./../images/content/intro01.svg');
+    }  
+
+    &.slide02{
+      background-image: url('./../images/content/intro02.svg');
+    } 
+
+    &.slide03{
+      background-image: url('./../images/content/intro03.svg');
+    } 
+
+    .slideWrap{
+      width: 100%;
+      flex-grow: 10;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      
+      .introText{
+        font-size: 1.8rem;
+        font-weight: 400;
+        margin: 0 20px;
+        text-align: center;
+        transition: all 0.4s;
+      }
+    }
+
+    .introTabWrap{
+      height: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      button{
+        background-color: #DEDEE8;
+        height: 100%;
+        width: 10px;
+        font-size: 0;
+        color: transparent;
+        transition: all 0.4s;
+      }
+
+      .active{
+        width: 40px;
+      }
+    }
+
+    .btnWrap{
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
