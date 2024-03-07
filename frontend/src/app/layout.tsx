@@ -16,12 +16,13 @@ export const metadata: Metadata = {
 
 const nanumSquareNeo = localFont({
   src: "../fonts/NanumSquareNeo-Variable.woff2",
+  display: 'swap',
 });
 
 export default function RootLayout({ children } : { children: ReactNode}) {
 
   return (
-    <html lang="en">
+    <html lang="en" className={nanumSquareNeo.className}>
       {/* className={nanumSquareNeo.className} */}
       <body>
         <main className="contentWrap">
