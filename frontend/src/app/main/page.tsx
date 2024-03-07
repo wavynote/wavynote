@@ -29,8 +29,8 @@ export default function notePage() {
               <h2>나의노트</h2>
             </div>
             { isOpenHeaderBtn === false ? ( <div className="headerBtnWrap">
-                <TextBtn name="폴더이동" type="light"></TextBtn>
-                <TextBtn name="삭제" type="light"></TextBtn>
+                <TextBtn name="폴더이동" type="light" onClick={undefined}></TextBtn>
+                <TextBtn name="삭제" type="light" onClick={undefined}></TextBtn>
                 <button className="textBtn light" onClick={toggleHeaderBtn}>완료</button>
               </div> ) : ( <div className="headerBtnWrap">
                 <button className="textBtn light" onClick={toggleHeaderBtn}>노트선택</button>
@@ -43,7 +43,8 @@ export default function notePage() {
           <div className="btnWrap">
             <div className="newNoteBtn">
               <Link href="/write">
-                <TextBtn name="새로운 노트 쓰기" type="newNote"></TextBtn>
+                <button className="textBtn newNote dark">새로운 노트 쓰기</button>
+                {/* <TextBtn name="새로운 노트 쓰기" type="newNote" onClick={undefined}></TextBtn> */}
               </Link>
             </div>
           </div>

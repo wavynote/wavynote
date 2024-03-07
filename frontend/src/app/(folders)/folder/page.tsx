@@ -50,7 +50,8 @@ export default function FolderList() {
               <h2>폴더</h2>
             </div>
             <div className="headerBtnWrap">
-              <TextBtn name="편집" type="light"></TextBtn>
+              <button className="textBtn default">편집</button>
+              {/* <TextBtn name="편집" type="light" onClick={undefined}></TextBtn> */}
               <IconBtn name="" type="search"></IconBtn>
             </div>
           </header>

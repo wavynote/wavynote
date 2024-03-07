@@ -19,8 +19,6 @@ function getTheme(type: ButtonType) {
   }
 }
 
-
-
 export default function Button({ name, type = "dark", onClick, ...rest }: ButtonProps) {
   const handleClick = () => {
     if( onClick ){

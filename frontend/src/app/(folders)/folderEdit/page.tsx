@@ -19,7 +19,8 @@ export default function folderEdit() {
               <h2>폴더</h2>
             </div>
             <div className="headerBtnWrap">
-              <TextBtn name="완료" type="dark"></TextBtn>
+              <button className="textBtn dark">완료</button>
+              {/* <TextBtn name="완료" type="dark" onClick={undefined}></TextBtn> */}
               <IconBtn name="" type="search"></IconBtn>
             </div>
           </header>
