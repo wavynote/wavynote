@@ -115,22 +115,28 @@ input {
   -webkit-appearance: none;
   -webkit-text-fill-color: black;
 }
+
 input::placeholder {
-  color: #f0f0f0;
+  color: #c6c6d0;
+  -webkit-text-fill-color: #c6c6d0;
 }
 
 input::-webkit-input-placeholder {
-  color: #f0f0f0;
+  color: #c6c6d0;
+  -webkit-text-fill-color: #c6c6d0;
 }
 
 input:-ms-input-placeholder {
-  color: #f0f0f0;
+  color: #c6c6d0;
+  -webkit-text-fill-color: #c6c6d0;
 }
 textarea::-webkit-input-placeholder {
-  color: #f0f0f0;
+  color: #c6c6d0;
+  -webkit-text-fill-color: #c6c6d0;
 }
 textarea:-ms-input-placeholder {
-  color: #f0f0f0;
+  color: #c6c6d0;
+  -webkit-text-fill-color: #c6c6d0;
 }
 
 i {

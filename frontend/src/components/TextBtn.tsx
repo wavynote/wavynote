@@ -3,6 +3,7 @@ type ButtonType = "light" | "dark" | "newNote";
 interface ButtonProps {
   name: string;
   type: ButtonType;
+  onClick?: () => void;
 }
 
 function getTheme(type: ButtonType) {
@@ -12,13 +13,23 @@ function getTheme(type: ButtonType) {
     case "dark":
       return "dark";
     case "newNote":
-      return "dark newNote"
+      return "dark newNote";
+    default:
+      return "";
   }
 }
 
-export default function Button({ name, type = "dark", ...rest }: ButtonProps) {
+
+
+export default function Button({ name, type = "dark", onClick, ...rest }: ButtonProps) {
+  const handleClick = () => {
+    if( onClick ){
+      onClick();
+    }  
+  }
+  
   return (
-    <button className={`textBtn ${getTheme(type)}`} {...rest}>
+    <button className={`textBtn ${getTheme(type)}`} onClick={handleClick} {...rest}>
       {name}
     </button>
   );
