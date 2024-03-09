@@ -22,7 +22,7 @@ const nanumSquareNeo = localFont({
 export default function RootLayout({ children } : { children: ReactNode}) {
 
   return (
-    <html lang="en" className={nanumSquareNeo.className}>
+    <html lang="en">
       {/* className={nanumSquareNeo.className} */}
       <body>
         <main className="contentWrap">

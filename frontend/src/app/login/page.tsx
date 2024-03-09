@@ -1,6 +1,11 @@
 'use client';
 
 import { useState } from "react";
+import { loginUser } from "@/api/auth/auth";
+
+import useValidation from "./userValidation";
+import { useRouter } from "next/navigation";
+
 
 import "@/assets/scss/style.scss";
 import Image from 'next/image';
@@ -8,60 +13,26 @@ import TextBtn from "@/components/TextBtn";
 
 export default function loginPage() {
 
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-  const [idError, setIdError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const { id, setId, password, setPassword, idError, passwordError, setPasswordError, validateInput } = useValidation();
+  const router = useRouter();
 
   const handleLogin = async (e:any) => {
     e.preventDefault();
-    
-    debugger;
-
-    // 초기화
-    setIdError('');
-    setPasswordError('');
 
     // 유효성 검사
-    let isValid = true;
-    if (!id) {
-      setIdError('ID를 입력해주세요.');
-      isValid = false;
-    }
-    if (!password) {
-      setPasswordError('Password를 입력해주세요.');
-      isValid = false;
-    }
+    const isValid = validateInput(id, password);
     if (!isValid) {
       return;
     }
 
-    const credentials = {
-      id: id,
-      password: password
-    };
-
     try {
-      const response = await fetch('/wavynote/v1.0/profile/signin', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${btoa('ID:PW')}`, // Replace 'ID:PW' with your actual credentials
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to login');
-      }
-
-      const data = await response.json();
-      // Handle successful login, e.g., redirect to another page
+      const data = await loginUser(id, password);
       console.log(data);
+      return router.push(`/main?${data.user_id, data.folder_id}`);
+
     } catch (error) {
       console.error(error);
-      // 서버 오류 또는 인증 오류에 대한 메시지 표시
-      setIdError('로그인에 실패했습니다. ID와 Password를 확인해주세요.');
+      setPasswordError('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
     }
   };
 
@@ -93,8 +64,8 @@ export default function loginPage() {
               </div>
             </form>
             <div className="loginHelpWrap">
-              <button>아이디 찾기</button>
-              <button>비밀번호 재설정</button>
+              <button disabled>아이디 찾기</button>
+              <button disabled>비밀번호 재설정</button>
             </div>
           </div>
           <div className="otherLoginWrap">
@@ -103,9 +74,9 @@ export default function loginPage() {
               다른 서비스 계정으로 시작하기
             </div>
             <div className="selectLogin">
-              <button className="kakao">카카오 로그인</button>
-              <button className="naver">네이버 로그인</button>
-              <button className="google">구글 로그인</button>
+              <button className="kakao" disabled>카카오 로그인</button>
+              <button className="naver" disabled>네이버 로그인</button>
+              <button className="google" disabled>구글 로그인</button>
             </div>
           </div>          
         </div>        
@@ -113,4 +84,3 @@ export default function loginPage() {
     </>
   );
 }
-  

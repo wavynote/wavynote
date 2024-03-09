@@ -16,7 +16,7 @@ interface Folder {
   note_count: number;
 }
 
-export default function FolderList() {
+export default function FolderList(userId: string) {
 
   const [folders, setFolders] = useState<Folder[]>([]);
 
@@ -38,7 +38,7 @@ export default function FolderList() {
       }
     };
 
-    fetchFolderList('somebody@naver.com');
+    fetchFolderList(userId);
   }, []);
 
   return (
