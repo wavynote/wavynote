@@ -4,14 +4,19 @@ import { useState, useEffect } from "react";
 
 import IconBtn from "@/components/IconBtn";
 import TextBtn from "@/components/TextBtn";
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import styles from "./page.module.scss";
 import "@/assets/scss/style.scss";
 
 import Link from "next/link";
 
-export default function notePage() {
+interface LandingProps {
+  userId: string;
+  folderId: string;
+}
+
+export default function landingPage() {
 
   // 토글 리스트 수정
   const [isOpenHeaderBtn, setToggleBtn] = useState(true);
@@ -19,34 +24,32 @@ export default function notePage() {
     setToggleBtn((isOpenHeaderBtn) => !isOpenHeaderBtn);
   }
 
+  // 
+  const [pageTitle, setPageTitle] = useState('');
+
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+  
   const userId = searchParams.get('userId');
   const folderId = searchParams.get('folderId');
 
-  interface LandingProps {
-    userId: string;
-    folderId: string;
-  }
+  useEffect(() => {
+    if (userId && folderId) {
+      fetchPageTitle(userId, folderId);
+    }
+  }, [userId, folderId]);
 
-  // const LandingPage: React.FC<LandingProps> = ({ userId, folderId }) => {
-  //   const [pageTitle, setPageTitle] = useState('');
-  
-  //   useEffect(() => {
-  //     if (userId && folderId) {
-  //       fetchPageTitle(userId, folderId);
-  //     }
-  //   }, [userId, folderId]);
-  
-  //   const fetchPageTitle = async (userId: string, folderId: string) => {
-  //     try {
-  //       const response = await axios(`/main?userId=${userId}&folderId=${folderId}`);
-  //       const data = await response.json();
-  //       setPageTitle(data.title);
-  //     } catch (error) {
-  //       console.error('Error fetching page title:', error);
-  //     }
-  //   };
+  const fetchPageTitle = async (userId: string, folderId: string) => {
+    try {
+      const response = await fetch(`/main?userId=${userId}&folderId=${folderId}`);
+      const data = await response.json();
+      
+      console.log(data);
+      setPageTitle(data.title);
+
+    } catch (error) {
+      console.error('Error fetching page title:', error);
+    }
+  };
 
   return (
     <div className="contentMin">
@@ -56,7 +59,7 @@ export default function notePage() {
             <div className="titleWrap">
               <Link href="/folder" className="prev">
               </Link>
-              <h2>{}</h2>
+              <h2>ddd{pageTitle}</h2>
             </div>
             { isOpenHeaderBtn === false ? ( <div className="headerBtnWrap">
                 <TextBtn name="폴더이동" type="light" onClick={undefined}></TextBtn>
