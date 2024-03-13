@@ -33,14 +33,24 @@ export default function landingPage() {
   const folderId = searchParams.get('folderId');
 
   useEffect(() => {
-    if (userId && folderId) {
-      fetchPageTitle(userId, folderId);
+    if (userId) {
+      fetchPageTitle(userId);
     }
   }, [userId, folderId]);
 
-  const fetchPageTitle = async (userId: string, folderId: string) => {
+  console.log(folderId);
+
+  const fetchPageTitle = async (userId:string) => {
     try {
-      const response = await fetch(`/main?userId=${userId}&folderId=${folderId}`);
+      const response = await fetch(`/wavynote/v1.0/main/folderlist?id=${userId}`,{
+        method: 'GET',
+          cache: 'no-store',
+          headers: {
+            'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
+            'Content-Type': 'application/json',
+          },
+      });
+      console.log(response);
       const data = await response.json();
       
       console.log(data);
@@ -59,7 +69,7 @@ export default function landingPage() {
             <div className="titleWrap">
               <Link href="/folder" className="prev">
               </Link>
-              <h2>ddd{pageTitle}</h2>
+              <h2>ddd {pageTitle} </h2>
             </div>
             { isOpenHeaderBtn === false ? ( <div className="headerBtnWrap">
                 <TextBtn name="폴더이동" type="light" onClick={undefined}></TextBtn>

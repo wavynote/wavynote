@@ -28,7 +28,7 @@ export default function loginPage() {
     try {
       const data = await loginUser(id, password);
       // console.log(data);
-      return router.push(`/main?userId=${data.user_id}&folderId=${data.folder_id}`);
+      return router.push(`/main?userId=${data.user_id}`);
 
     } catch (error) {
       console.error(error);
