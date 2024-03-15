@@ -407,14 +407,13 @@
           }
         }
       }
-
-      
     }
   }
 
   &:has(.noList){
     align-items: center;
     justify-content: center;
+    height: 100%;
 
     .noList{
       text-align: center;

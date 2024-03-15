@@ -28,8 +28,7 @@ export default function loginPage() {
     try {
       const data = await loginUser(id, password);
       // console.log(data);
-      return router.push(`/main?userId=${data.user_id}`);
-
+      return router.push(`/main?userId=${data.user_id}&folderId=${data.folder_id}`);
     } catch (error) {
       console.error(error);
       setPasswordError('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');

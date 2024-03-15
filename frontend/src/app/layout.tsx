@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 
 import "./globals.css";
 import "@/assets/scss/style.scss";
-
+import Nav from "@/components/Nav"
 
 export const metadata: Metadata = {
   title: "WavyNote",
@@ -26,7 +26,8 @@ export default function RootLayout({ children } : { children: ReactNode}) {
       {/* className={nanumSquareNeo.className} */}
       <body>
         <main className="contentWrap">
-          { children }
+          { children }          
+          <Nav></Nav>
         </main>
       </body>
     </html>

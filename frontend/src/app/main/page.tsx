@@ -16,6 +16,17 @@ interface LandingProps {
   folderId: string;
 }
 
+interface Note {
+  note_id: string;
+  title: string;
+  preview: string;
+}
+
+interface Folder {
+  folder_id: string;
+  folder_name: string;
+}
+
 export default function landingPage() {
 
   // 토글 리스트 수정
@@ -24,40 +35,70 @@ export default function landingPage() {
     setToggleBtn((isOpenHeaderBtn) => !isOpenHeaderBtn);
   }
 
-  // 
+  //
   const [pageTitle, setPageTitle] = useState('');
+  const [folders, setFolders] = useState<Folder[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
 
+  // 로그인에서 받아온 데이터
   const searchParams = useSearchParams();
-  
   const userId = searchParams.get('userId');
   const folderId = searchParams.get('folderId');
 
   useEffect(() => {
-    if (userId) {
-      fetchPageTitle(userId);
+      fetchFolders();
+  }, [userId]);  
+
+  useEffect(() => {
+    if (folderId) {
+      
+      const selectedFolder = folders.find(folder => folder.folder_id === folderId);
+      if (selectedFolder) {
+        setPageTitle(selectedFolder.folder_name);
+        fetchNotes(folderId);
+      }     
     }
-  }, [userId, folderId]);
+  }, [folderId, folders]);
 
-  console.log(folderId);
-
-  const fetchPageTitle = async (userId:string) => {
+  const fetchFolders = async () => {
     try {
       const response = await fetch(`/wavynote/v1.0/main/folderlist?id=${userId}`,{
         method: 'GET',
-          cache: 'no-store',
-          headers: {
-            'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
-            'Content-Type': 'application/json',
-          },
+        cache: 'no-store',
+        headers: {
+          'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
+          'Content-Type': 'application/json',
+        },
       });
-      console.log(response);
-      const data = await response.json();
-      
-      console.log(data);
-      setPageTitle(data.title);
 
+      const data = await response.json();
+      setFolders(data.data);
+      console.log("fetchFolder 실행시 응답받은 값은 아마도 존재하는 모든 폴더목록 : "+ data.data);
     } catch (error) {
-      console.error('Error fetching page title:', error);
+      console.error('Error fetching folders:', error);
+    }
+  };
+
+  const fetchNotes = async (folderId: string) => {
+    try {
+      const response = await fetch(`/wavynote/v1.0/main/notelist?uid=${userId}&fid=${folderId}`,{
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+          'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 404) {
+        // 404 일때 빈 배열로 넘김
+        setNotes([]);
+      } else {
+        const data = await response.json();
+        setNotes(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching notes:', error);
     }
   };
 
@@ -69,7 +110,7 @@ export default function landingPage() {
             <div className="titleWrap">
               <Link href="/folder" className="prev">
               </Link>
-              <h2>ddd {pageTitle} </h2>
+              <h2>{pageTitle}</h2>
             </div>
             { isOpenHeaderBtn === false ? ( <div className="headerBtnWrap">
                 <TextBtn name="폴더이동" type="light" onClick={undefined}></TextBtn>
@@ -94,79 +135,25 @@ export default function landingPage() {
         </section>
         <section className="noteListWrap">
           <div className="noteListMin">
-            <ul className="noteList">
-              <li className="list">
-                <Link href="/" className="noteCont">
-                    <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
-                    <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
-                    <div className="tagArea">
-                      <span className="tagDate">2023.01.01</span>
-                    </div>
-                </Link>							
-              </li>
-              {/* <li className="list">
-
-                <Link href="/" className="noteCont">
-                    <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
-                    <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
-                    <div className="tagArea">
-                      <span className="tagDate">2023.01.01</span>
-                    </div>
-                </Link>							
-              </li>
-              <li className="list">
-
-                <Link href="/" className="noteCont">
-                    <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
-                    <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
-                    <div className="tagArea">
-                      <span className="tagDate">2023.01.01</span>
-                    </div>
-                </Link>							
-              </li>
-              <li className="list">
-
-                <Link href="/" className="noteCont">
-                    <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
-                    <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
-                    <div className="tagArea">
-                      <span className="tagDate">2023.01.01</span>
-                    </div>
-                </Link>							
-              </li>
-              <li className="list">
-
-                <Link href="/" className="noteCont">
-                    <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
-                    <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
-                    <div className="tagArea">
-                      <span className="tagDate">2023.01.01</span>
-                    </div>
-                </Link>							
-              </li>
-              <li className="list">
-
-                <Link href="/" className="noteCont">
-                    <h4>리스트 제목입니다. 최대 1줄까지 표시됩니다.</h4>
-                    <p>글쓰기 내용이 표시됩니다. 최대 1줄까지 표시되고 나머지 내용은 말줄임표로 표시됩니다...</p>
-                    <div className="tagArea">
-                      <span className="tagDate">2023.01.01</span>
-                    </div>
-                </Link>							
-              </li> */}
-              
-            </ul>
+            {notes.length === 0 ? (
+              <p className="noList">
+                새로운 노트를<br />써보세요
+              </p>
+              ) : ( 
+              <ul className="noteList">
+                {notes.map(note => (
+                  <li key={note.note_id} className="list">
+                    <Link href={`/note/${note.note_id}`} className="noteCont">
+                      <h4>{note.title}</h4>
+                      <p>{note.preview}</p>
+                    </Link>							
+                  </li>
+                ))}      
+              </ul> 
+              )
+            }
           </div>
-        </section>
-        {/* <div className="noteListWrap">
-          <div className="noteListMin">
-            <p className="noList">
-              새로운 노트를
-              <br />
-              써보세요
-            </p>
-          </div>          
-        </div>*/}
+        </section>        
       </div>
     </div>
   );
