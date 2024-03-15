@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 import React, { useState } from "react";
+import { usePathname, useSearchParams } from 'next/navigation';
+
 // import { ReactComponent as MyNote} from '@/assets/images/icons/myNote.svg'
 
 import myNote from "@/assets/images/icons/myNote.svg";
@@ -12,6 +14,9 @@ import openNote from "@/assets/images/icons/opennote.svg";
 import myPage from "@/assets/images/icons/mypage.svg";
 
 const Nav = () => {
+  const pathname = usePathname();
+  if( pathname === '/intro' ||  pathname === '/login') return null;
+  
   const [activeNav, setActNav] = useState(1);
 
   return (
