@@ -11,3 +11,9 @@ $color_default: #040113;
 
 $color_black: #333333;
 /* end of color */
+
+button:disabled{
+  filter: grayscale(5);
+  opacity: 0.5;
+}
+

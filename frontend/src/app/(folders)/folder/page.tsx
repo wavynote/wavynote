@@ -18,28 +18,29 @@ interface Folder {
 
 export default function FolderList() {
 
-  const [folders, setFolders] = useState<Folder[]>([]);
+  // const [folders, setFolders] = useState<Folder[]>([]);
 
-  useEffect(() => {
-    const fetchFolderList = async (userId: string) => {
-      try {
-        const response = await fetch(`/wavynote/v1.0/main/folderlist?id=${userId}`, {
-          method: 'GET',
-          cache: 'no-store',
-          headers: {
-            'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        setFolders(data.data); // Here, we extract the 'data' array from the response
-      } catch (error) {
-        console.error('Error fetching folder list:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchFolderList = async (userId: string) => {
+  //     try {
+  //       const response = await fetch(`/wavynote/v1.0/main/folderlist?id=${userId}`, {
+  //         method: 'GET',
+  //         cache: 'no-store',
+  //         headers: {
+  //           'Authorization': 'Basic d2F2eW5vdGU6d2F2eTIwMjMwOTE0',
+  //           'Content-Type': 'application/json',
+  //         },
+  //       });
+  //       const data = await response.json();
+  //       console.log(data.data);
+  //       setFolders(data.data); // Here, we extract the 'data' array from the response
+  //     } catch (error) {
+  //       console.error('Error fetching folder list:', error);
+  //     }
+  //   };
 
-    fetchFolderList('somebody@naver.com');
-  }, []);
+  //   fetchFolderList('somebody@naver.com');
+  // }, []);
 
   return (
     <div className="contentMin">
@@ -61,13 +62,13 @@ export default function FolderList() {
             <li className="folderMin">
               <button name="폴더추가" className="FolderBtn dark">폴더추가</button>
             </li>
-            {folders.map((folder, index) => (
+            {/* {folders.map((folder, index) => (
               <li key={folder.folder_id} className="folderMin">
                 <button className="FolderBtn light">
                   {folder.folder_name}
                 </button>
               </li>
-            ))}
+            ))} */}
           </ul>    
         </section>
       </div>

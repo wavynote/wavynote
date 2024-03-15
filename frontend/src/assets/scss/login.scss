@@ -89,9 +89,14 @@
     .otherLoginWrap{
       border-top: 1px solid #DEDEE8;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      padding: 30px 0;
 
       .text{
         text-align: center;
+        font-size: 1.4rem;
       }
 
       .selectLogin{
@@ -99,6 +104,31 @@
         gap: 10px;
         width: 100%;
         justify-content: center;
+
+        button{
+          width: 50px;
+          height: 50px;
+          border-radius: 20px;
+          font-size: 0;
+          color: transparent;
+          background-repeat: no-repeat;
+          background-position: center center;
+        }
+
+        .naver{
+          background-image: url('./../images/icons/naver_logo.svg');
+          background-color: #03C75A;
+        }
+
+        .kakao{ 
+          background-image: url('./../images/icons/kakao_logo.svg');
+          background-color: #FEE500;
+        }
+
+        .google{
+          background-image: url('./../images/icons/google_logo.svg');
+          background-color: #ffffff;
+        }
       }
     }
   }
