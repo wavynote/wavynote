@@ -1,3 +1,4 @@
+// api/auth.ts
 import crypto from "crypto";
 
 export async function loginUser(id: string, password: string) {
@@ -22,7 +23,13 @@ export async function loginUser(id: string, password: string) {
       throw new Error('Failed to login');
     }
 
-    return await response.json();
+    const userData = await response.json();
+
+    // 로그인 정보를 로컬 스토리지에 저장
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    return userData;
+
   } catch (error) {
     throw error;
   }

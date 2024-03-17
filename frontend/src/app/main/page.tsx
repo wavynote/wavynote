@@ -11,10 +11,10 @@ import "@/assets/scss/style.scss";
 
 import Link from "next/link";
 
-interface LandingProps {
-  userId: string;
-  folderId: string;
-}
+// interface LandingProps {
+//   userId: string;
+//   folderId: string;
+// }
 
 interface Note {
   note_id: string;
@@ -40,27 +40,17 @@ export default function landingPage() {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
 
-  // 로그인에서 받아온 데이터
-  const searchParams = useSearchParams();
-  const userId = searchParams.get('userId');
-  const folderId = searchParams.get('folderId');
-
   useEffect(() => {
-      fetchFolders();
-  }, [userId]);  
+    // 로그인에서 받아온 데이터
+    const userDataString = localStorage.getItem("userData");
+    const userData = JSON.parse(userDataString || '{}');
 
-  useEffect(() => {
-    if (folderId) {
-      
-      const selectedFolder = folders.find(folder => folder.folder_id === folderId);
-      if (selectedFolder) {
-        setPageTitle(selectedFolder.folder_name);
-        fetchNotes(folderId);
-      }     
-    }
-  }, [folderId, folders]);
+    const userId = userData.user_id;
+    fetchFolders(userId);
+  }, []);
 
-  const fetchFolders = async () => {
+  const fetchFolders = async (userId:string) => {
+
     try {
       const response = await fetch(`/wavynote/v1.0/main/folderlist?id=${userId}`,{
         method: 'GET',
@@ -73,13 +63,38 @@ export default function landingPage() {
 
       const data = await response.json();
       setFolders(data.data);
-      console.log("fetchFolder 실행시 응답받은 값은 아마도 존재하는 모든 폴더목록 : "+ data.data);
+      console.info("fetchFolder 실행시 응답받은 값은 아마도 존재하는 모든 폴더목록 : "+ data.data);
     } catch (error) {
       console.error('Error fetching folders:', error);
     }
   };
 
-  const fetchNotes = async (folderId: string) => {
+  useEffect(() => {
+    // 로그인에서 받아온 데이터
+    const userDataString = localStorage.getItem("userData");
+    const userData = JSON.parse(userDataString || '{}');
+    const userId = userData.user_id;
+    const folderId = userData.folder_id;
+
+    if (folderId) {
+      findFolder(userId, folderId);
+    }
+  }, [folders]);
+
+  const findFolder = async(userId:string, folderId:string)=>{
+    if (folderId) {
+      console.log("folders" + folders);
+      const selectedFolder = folders.find(folder => folder.folder_id === folderId);
+      console.log("selectedFolder : "+ selectedFolder);
+      
+      if (selectedFolder) {
+        setPageTitle(selectedFolder.folder_name);
+        fetchNotes(userId, folderId);
+      }     
+    }
+  }
+
+  const fetchNotes = async (userId:string, folderId: string) => {
     try {
       const response = await fetch(`/wavynote/v1.0/main/notelist?uid=${userId}&fid=${folderId}`,{
         method: 'GET',

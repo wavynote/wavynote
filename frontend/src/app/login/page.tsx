@@ -6,7 +6,6 @@ import { loginUser } from "@/api/auth/auth";
 import useValidation from "./userValidation";
 import { useRouter } from "next/navigation";
 
-
 import "@/assets/scss/style.scss";
 import Image from 'next/image';
 import TextBtn from "@/components/TextBtn";
@@ -27,8 +26,13 @@ export default function loginPage() {
 
     try {
       const data = await loginUser(id, password);
-      // console.log(data);
-      return router.push(`/main?userId=${data.user_id}&folderId=${data.folder_id}`);
+      
+      // 로그인 성공 시 받은 데이터를 로컬 스토리지에 저장
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userData", JSON.stringify(data));
+
+      return router.push('/main');
+
     } catch (error) {
       console.error(error);
       setPasswordError('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');

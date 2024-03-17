@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
-import type { Metadata } from "next";
 import localFont from "next/font/local";
 
 import "./globals.css";
 import "@/assets/scss/style.scss";
-import Nav from "@/components/Nav"
+import Nav from "@/components/Nav";
+import type { Metadata } from "next";
+import Template from "@/components/Template";
 
 export const metadata: Metadata = {
   title: "WavyNote",
@@ -20,16 +21,10 @@ const nanumSquareNeo = localFont({
 });
 
 export default function RootLayout({ children } : { children: ReactNode}) {
-
   return (
-    <html lang="en">
-      {/* className={nanumSquareNeo.className} */}
-      <body>
-        <main className="contentWrap">
-          { children }          
-          <Nav></Nav>
-        </main>
-      </body>
-    </html>
+    <Template>
+      { children }
+      <Nav></Nav>
+    </Template>
   );
 }
